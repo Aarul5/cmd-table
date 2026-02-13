@@ -9,6 +9,19 @@ const args = process.argv.slice(2);
 const options: Record<string, string> = {};
 
 args.forEach(arg => {
+    if (arg === '--help' || arg === '-h') {
+        console.log(`
+Usage:
+  cat data.json | cmd-table [options]
+
+Options:
+  --help, -h      Show this help message
+  --theme=NAME    Set table theme (rounded, honeywell, double, etc.)
+  --columns=...   Comma-separated list of columns to show
+  --headerColor   Color for header text
+`);
+        process.exit(0);
+    }
     if (arg.startsWith('--')) {
         const [key, value] = arg.slice(2).split('=');
         options[key] = value || 'true';
