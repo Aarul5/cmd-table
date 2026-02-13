@@ -1,0 +1,78 @@
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Syntax check
+        run: |
+          shopt -s globstar
+          # Check built files in dist/
+          for f in dist/**/*.js; do
+            node -c "$f"
+          done
+
+      - name: Run tests
+        run: npm test
+
+      - name: CLI smoke test
+        run: node dist/cli.js --help
+        
+  publish:
+    name: Publish to npm
+    needs: test
+    runs-on: ubuntu-latest
+    # Only publish on push to main with commit message starting with 'release:'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release:')) || github.event_name == 'workflow_dispatch'
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm for OIDC trusted publishing
+        run: |
+          npm i -g npm@latest
+          npm -v
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - run: npm publish --access public --provenance
+       

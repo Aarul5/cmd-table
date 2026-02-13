@@ -98,6 +98,63 @@ mergeAdjacent(table, ['Department']);
 console.log(table.render());
 ```
 
+### Column & Row Spans
+
+Merge cells horizontally or vertically within the table.
+
+```ts
+// Span 2 columns
+table.addRow([
+  { content: 'Summary', colSpan: 2 },
+  'Status'
+]);
+
+// Span 2 rows (vertical merge) is handled by Auto-Merge or manual rowSpan
+```
+
+## Themes
+
+Choose from built-in themes to instantly style your table.
+
+```ts
+import { Table, THEME_DoubleLine } from 'cmd-table';
+
+// Apply a theme globally
+const table = new Table({ theme: THEME_DoubleLine });
+```
+
+Available themes:
+*   `THEME_Rounded` (Default)
+*   `THEME_Honeywell`
+*   `THEME_DoubleLine`
+*   `THEME_BoldBox`
+*   `THEME_Dots`
+*   `THEME_Void` (Borderless)
+
+## Streaming (Large Datasets)
+
+For large datasets, use the `StreamRenderer` to print rows as they are processed, rather than building the entire table in memory.
+
+```ts
+import { Table, StreamRenderer } from 'cmd-table';
+
+// Define columns first
+const table = new Table({ columns: ['ID', 'Message'] });
+const stream = new StreamRenderer(table);
+
+// Render header once
+console.log(stream.renderHeader());
+
+// Render rows in chunks or individually as data arrives
+data.forEach(item => {
+  const row = table.addRow([item.id, item.msg]);
+  console.log(stream.renderRows([row]));
+});
+
+// Render footer
+console.log(stream.renderFooter());
+```
+
 ## CLI Tool
 
 You can use the library directly from the terminal to format JSON data.
@@ -110,18 +167,6 @@ cat data.json | npx cmd-table
 cat data.json | npx cmd-table --columns=name,age --theme=double
 ```
 
-### Testing Locally (Before Publishing)
-
-Since the package is not yet published to NPM, you can test the CLI tool using the local build:
-
-```bash
-# Compile TS to JS
-npm run build 
-
-# Run compiled script directly
-type data.json | node dist/cli.js
-```
-
 ## Exports
 
 Export your table data to various formats.
@@ -132,6 +177,12 @@ import { MarkdownRenderer, CsvRenderer } from 'cmd-table';
 const md = new MarkdownRenderer().render(table);
 const csv = new CsvRenderer().render(table);
 ```
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+This project is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
 
 ## License
 
