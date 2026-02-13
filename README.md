@@ -1,5 +1,11 @@
 # cmd-table
 
+[![npm](https://img.shields.io/npm/v/cmd-table)](https://www.npmjs.com/package/cmd-table)
+[![license](https://img.shields.io/npm/l/cmd-table)](https://github.com/Aarul5/cmd-table/blob/main/LICENSE)
+[![CI](https://github.com/Aarul5/cmd-table/actions/workflows/ci.yml/badge.svg)](https://github.com/Aarul5/cmd-table/actions/workflows/ci.yml)
+[![downloads](https://img.shields.io/npm/dm/cmd-table)](https://www.npmjs.com/package/cmd-table)
+[![size](https://img.shields.io/bundlephobia/minzip/cmd-table)](https://bundlephobia.com/package/cmd-table)
+
 A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 
 ## Features
