@@ -1,0 +1,96 @@
+#!/usr/bin/env node
+import { Table } from './Table';
+import { getTheme, ThemeName } from './themes/Theme';
+import * as fs from 'fs';
+
+// Simple arg parser
+// Usage: cli-table --theme=rounded --columns=name,age < data.json
+const args = process.argv.slice(2);
+const options: Record<string, string> = {};
+
+args.forEach(arg => {
+    if (arg.startsWith('--')) {
+        const [key, value] = arg.slice(2).split('=');
+        options[key] = value || 'true';
+    }
+});
+
+function readStdin(): Promise<string> {
+    return new Promise((resolve, reject) => {
+        let data = '';
+        const stdin = process.stdin;
+
+        if (stdin.isTTY) {
+            // If no input piped, show help or just resolve empty?
+            // Resolve empty to allow args-only usage if we ever support it
+            resolve('');
+            return;
+        }
+
+        stdin.setEncoding('utf8');
+        stdin.on('data', chunk => data += chunk);
+        stdin.on('end', () => resolve(data));
+        stdin.on('error', reject);
+    });
+}
+
+async function main() {
+    try {
+        const input = await readStdin();
+        if (!input) {
+            console.error('No input provided. Pipe JSON data to this tool.');
+            process.exit(1);
+        }
+
+        let data: any[];
+        try {
+            data = JSON.parse(input);
+        } catch (e) {
+            console.error('Failed to parse JSON input.');
+            process.exit(1);
+        }
+
+        if (!Array.isArray(data)) {
+            if (typeof data === 'object') {
+                // Convert single object to array?
+                data = [data];
+            } else {
+                console.error('Input must be a JSON array or object.');
+                process.exit(1);
+            }
+        }
+
+        const table = new Table();
+
+        // Apply options
+        if (options.theme) {
+            table.theme = getTheme(options.theme as ThemeName) || getTheme('rounded');
+        }
+
+        if (options.columns) {
+            const cols = options.columns.split(',');
+            cols.forEach(c => table.addColumn(c.trim()));
+        } else if (data.length > 0) {
+            // Auto-detect columns from first row
+            Object.keys(data[0]).forEach(k => table.addColumn(k));
+        }
+
+        if (options.headerColor) {
+            table.headerColor = options.headerColor;
+        }
+
+        data.forEach(row => {
+            // If columns defined, map strictly? 
+            // The Table.addRow accepts generic object, so it handles mapping by key/name match.
+            table.addRow(row);
+        });
+
+        console.log(table.render());
+
+    } catch (err) {
+        console.error('Error:', err);
+        process.exit(1);
+    }
+}
+
+main();

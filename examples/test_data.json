@@ -1,0 +1,17 @@
+[
+    {
+        "name": "Alice",
+        "role": "Dev",
+        "status": "Active"
+    },
+    {
+        "name": "Bob",
+        "role": "PM",
+        "status": "Inactive"
+    },
+    {
+        "name": "Charlie",
+        "role": "Designer",
+        "status": "Active"
+    }
+]
