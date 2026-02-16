@@ -1,4 +1,4 @@
-import { Table, addTree, mergeAdjacent } from '../src';
+import { Table } from '../src';
 
 console.log('--- 1. Tree Visualization (File System) ---');
 console.log('Demonstrates `addTree` utility for hierarchical data.\n');
@@ -27,7 +27,7 @@ const fileSystem = [
     { Name: 'README.md', Size: '5KB', Type: 'File' }
 ];
 
-addTree(treeTable, 'Name', fileSystem);
+treeTable.addTree('Name', fileSystem);
 console.log(treeTable.render());
 
 
@@ -53,8 +53,6 @@ mergeTable.addRows([
 ]);
 
 // Apply merge to 'Day' and 'Activity' columns
-// Note: 'Coding' on Monday 10:00 and 11:00 are adjacent in 'Activity' column? 
-// Yes, they are rows 1 and 2. 
-mergeAdjacent(mergeTable, ['Day']);
+mergeTable.mergeAdjacent(['Day']);
 
 console.log(mergeTable.render());

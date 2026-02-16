@@ -1,8 +1,5 @@
 import { Table } from '../src';
-import { CsvRenderer } from '../src/renderers/CsvRenderer';
-import { JsonRenderer } from '../src/renderers/JsonRenderer';
-import { HtmlRenderer } from '../src/renderers/HtmlRenderer';
-import { MarkdownRenderer } from '../src/renderers/MarkdownRenderer';
+
 
 console.log('--- Pagination & Export Demo ---\n');
 

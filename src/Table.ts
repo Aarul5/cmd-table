@@ -7,6 +7,13 @@ import { HtmlRenderer } from './renderers/HtmlRenderer';
 import { MarkdownRenderer } from './renderers/MarkdownRenderer';
 import { ITheme, THEME_DEFAULT, THEME_Rounded } from './themes/Theme';
 
+
+
+export interface TreeNode {
+    [key: string]: any;
+    children?: TreeNode[];
+}
+
 export interface ITableOptions {
     columns?: IColumnOptions[];
     theme?: ITheme;
@@ -201,5 +208,51 @@ export class Table {
         });
 
         return table;
+    }
+
+    public addTree(labelColumn: string, nodes: TreeNode[], indentSize: number = 2): void {
+        const processNode = (node: TreeNode, depth: number) => {
+            const rowData = { ...node };
+            delete rowData.children;
+
+            // Indent label
+            if (rowData[labelColumn]) {
+                const prefix = depth > 0 ? ' '.repeat((depth - 1) * indentSize) + '├─ ' : '';
+                rowData[labelColumn] = prefix + rowData[labelColumn];
+            }
+
+            this.addRow(rowData);
+
+            if (node.children) {
+                node.children.forEach((child) => {
+                    processNode(child, depth + 1);
+                });
+            }
+        };
+
+        nodes.forEach((node) => processNode(node, 0));
+    }
+
+    public mergeAdjacent(columns?: string[]): void {
+        const colIndices = columns
+            ? columns.map((name) => this.columns.findIndex((c) => c.name === name || c.key === name)).filter((i) => i >= 0)
+            : this.columns.map((_, i) => i);
+
+        if (colIndices.length === 0) return;
+
+        colIndices.forEach((colIndex) => {
+            let lastCell = this.rows[0]?.cells[colIndex];
+
+            for (let i = 1; i < this.rows.length; i++) {
+                const currentCell = this.rows[i].cells[colIndex];
+
+                if (lastCell && currentCell && lastCell.content === currentCell.content) {
+                    lastCell.rowSpan = (lastCell.rowSpan || 1) + 1;
+                    currentCell.merged = true;
+                } else {
+                    lastCell = currentCell;
+                }
+            }
+        });
     }
 }

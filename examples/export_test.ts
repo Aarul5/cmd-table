@@ -1,4 +1,4 @@
-import { Table, CsvRenderer, JsonRenderer, MarkdownRenderer } from '../src';
+import { Table } from '../src';
 
 const table = new Table();
 table.addColumn('Name');
@@ -15,13 +15,11 @@ console.log('--- Original Table (Rounded) ---');
 console.log(table.render());
 
 console.log('\n--- CSV Export ---');
-const csv = new CsvRenderer().render(table);
-console.log(csv);
+console.log(table.export('csv'));
 
 console.log('\n--- JSON Export ---');
-const json = new JsonRenderer().render(table);
+const json = table.export('json');
 console.log(JSON.stringify(JSON.parse(json), null, 2)); // Pretty print JSON
 
 console.log('\n--- Markdown Export ---');
-const md = new MarkdownRenderer().render(table);
-console.log(md);
+console.log(table.export('md'));

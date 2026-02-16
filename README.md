@@ -71,7 +71,7 @@ table.addColumn({ name: 'Warning', color: 'yellow' });
 Visualize nested data structures like file systems or org charts.
 
 ```ts
-import { Table, addTree } from 'cmd-table';
+import { Table } from 'cmd-table';
 
 const table = new Table();
 table.addColumn('Name');
@@ -82,7 +82,7 @@ const files = [
   { Name: 'package.json', Size: '1KB' }
 ];
 
-addTree(table, 'Name', files);
+table.addTree('Name', files);
 console.log(table.render());
 ```
 
@@ -91,7 +91,7 @@ console.log(table.render());
 Automatically merge vertically adjacent cells with the same content.
 
 ```ts
-import { Table, mergeAdjacent } from 'cmd-table';
+import { Table } from 'cmd-table';
 
 const table = new Table();
 table.addColumn('Department');
@@ -104,7 +104,7 @@ table.addRows([
 ]);
 
 // Merges the 'Engineering' cells vertically
-mergeAdjacent(table, ['Department']);
+table.mergeAdjacent(['Department']);
 console.log(table.render());
 ```
 

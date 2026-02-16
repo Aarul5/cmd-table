@@ -14,7 +14,7 @@ export * from './renderers/JsonRenderer';
 export * from './renderers/HtmlRenderer';
 
 export * from './utils/colors';
-export * from './utils/mergeUtils';
-export * from './utils/treeUtils';
+export { mergeAdjacent } from './utils/mergeUtils';
+export { addTree } from './utils/treeUtils';
 
 export * from './InteractiveTable';
