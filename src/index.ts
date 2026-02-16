@@ -16,3 +16,5 @@ export * from './renderers/HtmlRenderer';
 export * from './utils/colors';
 export * from './utils/mergeUtils';
 export * from './utils/treeUtils';
+
+export * from './InteractiveTable';
