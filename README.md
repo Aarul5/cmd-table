@@ -15,6 +15,7 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 *   **Rich Styling**: ANSI color support for headers and columns (defaults to **Magenta** headers and **Cyan** keys).
 *   **Advanced Layouts**: `colSpan`, `rowSpan`, auto-sizing, word-wrap, and specific column widths.
 *   **Responsive**: Hide or stack columns on smaller screens based on priority.
+*   **Interactive TUI**: Built-in interactive mode for exploring large datasets with pagination and sorting.
 *   **Data Visualization**:
     *   **Tree View**: Visualize hierarchical data with automatic indentation.
     *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
@@ -51,17 +52,79 @@ table.addRow({ Name: 'Bob', Role: 'PM', Status: 'Offline' });
 console.log(table.render());
 ```
 
-## Styling
+## Interactive Table (TUI)
 
-Customize colors for headers and specific columns.
+Build interactive terminal interfaces using `cmd-table`.
+
+Use the built-in `InteractiveTable` class for instant pagination and sorting features without boilerplate. **This is the recommended way to display large datasets.**
 
 ```ts
+import { Table, InteractiveTable } from 'cmd-table';
+
+const table = new Table();
+// ... add hundreds of rows ...
+
+// Start interactive mode (Handles keys: n/p for pages, s for sort, q for quit)
+new InteractiveTable(table, { pageSize: 15 }).start();
+```
+
+To see it in action:
+```bash
+npx ts-node examples/interactive_table.ts
+npx ts-node examples/large_table.ts
+```
+
+## Core Features
+
+### Styling & Themes
+
+Customize colors for headers and specific columns, or check out built-in themes.
+
+```ts
+import { Table, THEME_DoubleLine } from 'cmd-table';
+
 const table = new Table({
+  theme: THEME_DoubleLine, // Apply theme globally
   headerColor: 'blue', // Override default magenta
 });
 
 table.addColumn({ name: 'Error', color: 'red' });
 table.addColumn({ name: 'Warning', color: 'yellow' });
+```
+
+Available themes: `THEME_Rounded` (Default), `THEME_Honeywell`, `THEME_DoubleLine`, `THEME_BoldBox`, `THEME_Dots`, `THEME_Void`.
+
+### Data Operations (Sorting)
+
+Sort the table by a specific column.
+
+```ts
+// Sort by 'Name' in ascending order
+table.sort('Name');
+
+// Sort by 'Age' in descending order
+table.sort('Age', 'desc');
+```
+
+### Pagination
+
+Programmatically paginate your table data.
+
+```ts
+// Get all pages at once
+const pages = table.getPages(10);
+pages.forEach(page => console.log(page.render()));
+```
+
+### Exports
+
+Export your table data to various formats using the simplified `export()` method.
+
+```ts
+// Markdown, CSV, JSON, HTML
+const md = table.export('md');
+const csv = table.export('csv');
+const json = table.export('json');
 ```
 
 ## Advanced Visualization
@@ -108,103 +171,6 @@ table.mergeAdjacent(['Department']);
 console.log(table.render());
 ```
 
-### Column & Row Spans
-
-Merge cells horizontally or vertically within the table.
-
-```ts
-// Span 2 columns
-table.addRow([
-  { content: 'Summary', colSpan: 2 },
-  'Status'
-]);
-
-// Span 2 rows (vertical merge) is handled by Auto-Merge or manual rowSpan
-```
-
-## Themes
-
-Choose from built-in themes to instantly style your table.
-
-```ts
-import { Table, THEME_DoubleLine } from 'cmd-table';
-
-// Apply a theme globally
-const table = new Table({ theme: THEME_DoubleLine });
-```
-
-Available themes:
-*   `THEME_Rounded` (Default)
-*   `THEME_Honeywell`
-*   `THEME_DoubleLine`
-*   `THEME_BoldBox`
-*   `THEME_Dots`
-*   `THEME_Void` (Borderless)
-
-## Streaming (Large Datasets)
-
-For large datasets, use the `StreamRenderer` to print rows as they are processed, rather than building the entire table in memory.
-
-```ts
-import { Table, StreamRenderer } from 'cmd-table';
-
-// Define columns first
-const table = new Table({ columns: ['ID', 'Message'] });
-const stream = new StreamRenderer(table);
-
-// Render header once
-console.log(stream.renderHeader());
-
-// Render rows in chunks or individually as data arrives
-data.forEach(item => {
-  const row = table.addRow([item.id, item.msg]);
-  console.log(stream.renderRows([row]));
-});
-
-// Render footer
-console.log(stream.renderFooter());
-```
-
-## CLI Tool
-
-You can use the library directly from the terminal to format JSON data.
-
-```bash
-# Pipe JSON data
-cat data.json | npx cmd-table
-
-# Specify columns and theme
-cat data.json | npx cmd-table --columns=name,age --theme=double
-```
-
-### Data Operations (Sorting)
-
-Sort the table by a specific column.
-
-```ts
-// Sort by 'Name' in ascending order
-table.sort('Name');
-
-// Sort by 'Age' in descending order
-table.sort('Age', 'desc');
-```
-
-### Pagination
-
-paginate your table data.
-
-```ts
-// Get the first page with 10 rows per page
-const page1 = table.paginate(1, 10);
-console.log(page1.render());
-
-// OR get all pages at once
-const pages = table.getPages(10);
-pages.forEach(page => console.log(page.render()));
-```
-
-## Advanced Features
-
 ### Responsive Layouts
 
 Make your tables adapt to different terminal widths.
@@ -216,14 +182,13 @@ const table = new Table({
 });
 
 // 'hide': Low priority columns are hidden if they don't fit.
-// 'stack': Table converts to a vertical list view if it doesn't fit.
 table.addColumn({ name: 'ID', priority: 1 }); // High priority
 table.addColumn({ name: 'Description', priority: 0 }); // Low priority
 ```
 
-### Header Groups
+### Header Groups & Footers
 
-Group multiple columns under a "super-header".
+Group columns or add summaries.
 
 ```ts
 const table = new Table({
@@ -232,70 +197,39 @@ const table = new Table({
     { title: 'Performance', colSpan: 2 } // Spans 'Score' and 'Grade'
   ]
 });
-```
-
-### Footers & Summaries
-
-Add a footer row manually or calculate summaries.
-
-```ts
-// Manual Footer
-table.setFooter({ Name: 'Total', Cost: '100.00' });
 
 // Automatic Summary (Sum, Avg, Count)
 table.summarize(['Cost'], 'sum');
 ```
 
-## Exports
+### Column & Row Spans
 
-Export your table data to various formats using the simplified `export()` method.
-
-```ts
-// Markdown
-const md = table.export('md');
-
-// CSV
-const csv = table.export('csv'); // uses comma delimiter by default
-// For custom options, use the renderer directly:
-// new CsvRenderer({ delimiter: ';' }).render(table)
-
-// JSON
-const json = table.export('json');
-
-// HTML
-const html = table.export('html');
-```
-
-## Interactive Table (TUI)
-
-Build interactive terminal interfaces using `cmd-table`.
-
-Use the built-in `InteractiveTable` class for instant pagination and sorting features without boilerplate. **This is the recommended way to display large datasets.**
+Merge cells horizontally manually.
 
 ```ts
-import { Table, InteractiveTable } from 'cmd-table';
-
-const table = new Table();
-// ... add hundreds of rows ...
-
-// Start interactive mode (Handles keys: n/p for pages, s for sort, q for quit)
-new InteractiveTable(table, { pageSize: 15 }).start();
+table.addRow([
+  { content: 'Summary', colSpan: 2 },
+  'Status'
+]);
 ```
 
-To see it in action:
+## Performance (Streaming)
+
+For very large datasets, use the `StreamRenderer` to print rows as they are processed.
+
+```ts
+import { Table, StreamRenderer } from 'cmd-table';
+const stream = new StreamRenderer(table);
+// ... renderHeader, renderRows, renderFooter ...
+```
+
+## CLI Tool
+
+Format JSON data directly from the terminal.
+
 ```bash
-npx ts-node examples/interactive_table.ts
-npx ts-node examples/large_table.ts
+cat data.json | npx cmd-table --columns=name,age --theme=double
 ```
-
-## More Examples
-
-Check the `examples/` folder for more usage patterns:
-*   [Basic Usage](examples/basic.ts)
-*   [Advanced Visualization](examples/advanced_viz.ts) (Trees, Auto-Merge)
-*   [Exports & Pagination](examples/pagination_export.ts)
-*   [Streaming](examples/stream_test.ts)
-*   [Themes](examples/theme_test.ts)
 
 ## Direct Access (Power Users)
 
