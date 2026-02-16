@@ -65,7 +65,8 @@ export class StringRenderer implements IRenderer {
     }
 
     protected getResponsiveTable(table: Table): Table {
-        if (!table.terminalWidth || table.responsiveMode === 'none') {
+        const terminalWidth = table.terminalWidth || process.stdout.columns || 80;
+        if (table.responsiveMode === 'none') {
             if (table.columns.some((column) => column.hidden)) {
                 return this.buildVisibleTable(table);
             }
@@ -84,7 +85,7 @@ export class StringRenderer implements IRenderer {
         const widths = this.calculateColumnWidths(next, grid);
         const total = this.calculateTableWidth(widths, this.getVisibleColumns(next), next.theme);
 
-        if (total <= table.terminalWidth) return this.buildVisibleTable(next);
+        if (total <= terminalWidth) return this.buildVisibleTable(next);
 
         const sorted = next.columns.map((column, index) => ({ index, priority: column.priority })).sort((a, b) => b.priority - a.priority);
         for (const col of sorted) {
@@ -94,7 +95,7 @@ export class StringRenderer implements IRenderer {
             const g = LayoutManager.layout(fake);
             const w = this.calculateColumnWidths(fake, g);
             const size = this.calculateTableWidth(w, this.getVisibleColumns(fake), fake.theme);
-            if (size <= table.terminalWidth) {
+            if (size <= terminalWidth) {
                 if (table.responsiveMode === 'stack') {
                     return this.toStacked(fake);
                 }

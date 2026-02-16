@@ -171,13 +171,58 @@ table.mergeAdjacent(['Department']);
 console.log(table.render());
 ```
 
+### CrossTab (Matrix View)
+
+Generate a matrix view (e.g., Sales by Product vs Month).
+
+```ts
+import { CrossTab } from 'cmd-table';
+
+const matrix = CrossTab.create(salesData, {
+    rowKey: 'Product',
+    colKey: 'Month',
+    valueKey: 'Amount',
+    aggregator: 'sum', // or 'count', 'first', 'last', or custom function
+    missingValue: 0
+});
+console.log(matrix.render());
+```
+
+### Pivot Tables
+
+Group and aggregate data naturally.
+
+```ts
+import { PivotTable } from 'cmd-table';
+
+const pivot = PivotTable.create(salesData, {
+    groupBy: 'Region',
+    targetColumn: 'Amount',
+    algorithm: 'sum' // or 'avg', 'min', 'max', 'count', or custom function
+});
+console.log(pivot.render());
+```
+
+### Statistical Aggregations
+
+Use built-in statistical functions for your own analysis.
+
+```ts
+import { Aggregations } from 'cmd-table';
+
+const values = [10, 20, 30, 40, 50];
+console.log(Aggregations.avg(values)); // 30
+console.log(Aggregations.stdDev(values)); // 14.14
+console.log(Aggregations.percentile(values, 0.9)); // 90th percentile
+```
+
 ### Responsive Layouts
 
 Make your tables adapt to different terminal widths.
 
 ```ts
 const table = new Table({
-  terminalWidth: process.stdout.columns || 80,
+  // terminalWidth: process.stdout.columns, // Defaults to current terminal width or 80
   responsiveMode: 'hide', // or 'stack'
 });
 

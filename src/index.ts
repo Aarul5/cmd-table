@@ -18,3 +18,7 @@ export { mergeAdjacent } from './utils/mergeUtils';
 export { addTree } from './utils/treeUtils';
 
 export * from './InteractiveTable';
+// Export Analysis Layer
+export * from './analysis/Aggregations';
+export * from './analysis/PivotTable';
+export * from './analysis/CrossTab';

@@ -31,6 +31,14 @@ export class InteractiveTable {
         process.stdin.on('keypress', this.handleKey.bind(this));
 
         this.render();
+        process.stdout.on('resize', () => this.render());
+    }
+
+    private clearScreen(): void {
+        const blank = '\n'.repeat(process.stdout.rows);
+        console.log(blank);
+        readline.cursorTo(process.stdout, 0, 0);
+        readline.clearScreenDown(process.stdout);
     }
 
     private handleKey(str: string, key: readline.Key): void {
@@ -84,7 +92,7 @@ export class InteractiveTable {
     }
 
     private render(): void {
-        console.clear();
+        this.clearScreen();
         console.log('--- Interactive Table ---');
         console.log('Keys: [n/Right] Next, [p/Left] Prev, [s] Sort, [q] Quit\n');
 
