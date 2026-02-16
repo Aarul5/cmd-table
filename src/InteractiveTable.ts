@@ -1,8 +1,11 @@
 import * as readline from 'readline';
 import { Table } from './Table';
+import { Row } from './Row';
 
 export interface IInteractiveOptions {
     pageSize?: number;
+    onSelect?: (selected: any[]) => void;
+    onExit?: () => void;
 }
 
 export class InteractiveTable {
@@ -13,9 +16,24 @@ export class InteractiveTable {
     private sortDirection: 'asc' | 'desc' = 'asc';
     private rl: readline.Interface;
 
+    // TUI State
+    private mode: 'nav' | 'search' = 'nav';
+    private searchQuery: string = '';
+    private selectedRows: Set<Row> = new Set();
+    private displayedRows: Row[] = [];
+    private onSelect?: (selected: any[]) => void;
+    private onExit?: () => void;
+
     constructor(table: Table, options: IInteractiveOptions = {}) {
         this.table = table;
         this.pageSize = options.pageSize || 10;
+        // @ts-ignore
+        this.onSelect = options.onSelect;
+        // @ts-ignore
+        this.onExit = options.onExit;
+
+        this.displayedRows = [...this.table.rows];
+
         this.rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
@@ -27,9 +45,10 @@ export class InteractiveTable {
             process.stdin.setRawMode(true);
         }
         readline.emitKeypressEvents(process.stdin);
-
         process.stdin.on('keypress', this.handleKey.bind(this));
 
+        // Initial filter/sort apply
+        this.applyFilterAndSort();
         this.render();
         process.stdout.on('resize', () => this.render());
     }
@@ -42,21 +61,147 @@ export class InteractiveTable {
     }
 
     private handleKey(str: string, key: readline.Key): void {
-        if (key.name === 'q' || (key.ctrl && key.name === 'c')) {
+        // Global Exit (only in nav mode or Ctrl+C)
+        if (key.name === 'c' && key.ctrl) {
             this.stop();
-        } else if (key.name === 'n' || key.name === 'right') {
-            this.nextPage();
-        } else if (key.name === 'p' || key.name === 'left') {
-            this.prevPage();
-        } else if (key.name === 's') {
-            this.toggleSort();
-        } else if (key.name === 'up' || key.name === 'down') {
-            // Future: Navigate rows?
+            return;
+        }
+
+        if (this.mode === 'nav' && key.name === 'q') {
+            this.stop();
+            return;
+        }
+
+        if (this.mode === 'search') {
+            this.handleSearchInput(str, key);
+            return;
+        }
+
+        // Check for slash explicitly if key.name is undefined
+        if ((key.name === 'slash' || str === '/') && this.mode === 'nav') {
+            this.mode = 'search';
+            this.searchQuery = '';
+            this.render();
+            return;
+        }
+
+        switch (key.name) {
+            case 'n':
+            case 'right':
+                this.nextPage();
+                break;
+            case 'p':
+            case 'left':
+                this.prevPage();
+                break;
+            case 's':
+                this.toggleSort();
+                break;
+            case 'space': // Select All Matching? Or just current page?
+                // For this version: Toggle select all visible rows
+                // Limitation: Without a cursor, we can't select single rows easily.
+                // Let's implement: Space = Add ALL currently displayed rows to selection
+                // If all already selected, deselect them.
+                const allSelected = this.displayedRows.every(r => this.selectedRows.has(r));
+                if (allSelected) {
+                    this.displayedRows.forEach(r => this.selectedRows.delete(r));
+                } else {
+                    this.displayedRows.forEach(r => this.selectedRows.add(r));
+                }
+                this.render();
+                break;
+            case 'return': // Enter -> Action
+            case 'enter':
+                if (this.onSelect) {
+                    // Return explicitly selected rows, OR current view if none selected
+                    const selected = Array.from(this.selectedRows);
+                    const result = selected.length > 0 ? selected : this.displayedRows;
+                    this.stop();
+                    this.onSelect(result.map(r => r.getData()));
+                }
+                break;
+            case 'escape':
+                if (this.searchQuery) {
+                    this.searchQuery = '';
+                    this.applyFilterAndSort();
+                    this.render();
+                } else if (this.selectedRows.size > 0) {
+                    this.selectedRows.clear(); // Clear selection on Esc if no search
+                    this.render();
+                }
+                break;
         }
     }
 
+    private handleSearchInput(str: string, key: readline.Key): void {
+        if (key.name === 'return' || key.name === 'enter') {
+            this.mode = 'nav';
+            this.render();
+            return;
+        }
+
+        if (key.name === 'escape') {
+            this.mode = 'nav';
+            this.searchQuery = '';
+            this.applyFilterAndSort();
+            this.render();
+            return;
+        }
+
+        if (key.name === 'backspace') {
+            this.searchQuery = this.searchQuery.slice(0, -1);
+        } else if (str && str.length === 1 && !key.ctrl && !key.meta) {
+            // Only accept printable characters
+            this.searchQuery += str;
+        }
+
+        this.applyFilterAndSort();
+        this.render();
+    }
+
+    private applyFilterAndSort(): void {
+        let rows = [...this.table.rows];
+
+        // 1. Filter
+        if (this.searchQuery) {
+            const lower = this.searchQuery.toLowerCase();
+            rows = rows.filter(row => {
+                return row.cells.some(cell => String(cell.content).toLowerCase().includes(lower));
+            });
+        }
+
+        // 2. Sort
+        // (Existing sort logic from table is mutation-based, which is tricky for views)
+        // We should sort the *view* indices? 
+        // For now, let's use the Table's sort but on our local copy? 
+        // Table.rows is public. 
+        // Actually, Table.sort sorts in place. 
+        // Let's assume for this TUI we handle sorting on displayedRows.
+        if (this.sortColumnIndex >= 0) {
+            const col = this.table.columns[this.sortColumnIndex];
+            if (col) {
+                rows.sort((a, b) => {
+                    const valA = a.cells[this.sortColumnIndex]?.content ?? '';
+                    const valB = b.cells[this.sortColumnIndex]?.content ?? '';
+                    const numA = Number(valA);
+                    const numB = Number(valB);
+
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return this.sortDirection === 'asc' ? numA - numB : numB - numA;
+                    }
+                    if (valA < valB) return this.sortDirection === 'asc' ? -1 : 1;
+                    if (valA > valB) return this.sortDirection === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+        }
+
+        this.displayedRows = rows;
+        this.currentPage = 1; // Reset to page 1 on filter change
+    }
+
     private nextPage(): void {
-        const totalPages = Math.ceil(this.table.rows.length / this.pageSize);
+        const totalPages = Math.ceil(this.displayedRows.length / this.pageSize);
         if (this.currentPage < totalPages) {
             this.currentPage++;
             this.render();
@@ -71,35 +216,71 @@ export class InteractiveTable {
     }
 
     private toggleSort(): void {
-        // Simple rotation through columns for demo? 
-        // Or just sort current column?
-        // Let's stick to the example behavior: Sort by FIRST column for now, 
-        // but maybe allow cycling columns in future.
-        // For now, let's just reverse the sort on the first column for simplicity 
-        // as per the requirement "toggle sort". 
-        // Actually, let's make it robust: Cycle through columns with 'c' or 'tab'?
-        // The user request was "why manual work", so we should replicate the manual example's feature set first.
-        // Example sorted by "Name" (index 1 in example).
-
-        const col = this.table.columns[this.sortColumnIndex];
+        // Toggle direction or switch column?
+        // Let's switch direction for now
         if (this.sortDirection === 'asc') {
             this.sortDirection = 'desc';
         } else {
             this.sortDirection = 'asc';
         }
-        this.table.sort(col.name, this.sortDirection);
+        this.applyFilterAndSort();
         this.render();
     }
 
     private render(): void {
         this.clearScreen();
-        console.log('--- Interactive Table ---');
-        console.log('Keys: [n/Right] Next, [p/Left] Prev, [s] Sort, [q] Quit\n');
+        console.log('--- Interactive Table (Advanced) ---');
+        console.log(`keys: [Right] Next | [Left] Prev | [s] Sort | [/] Search | [Space] Select All | [Enter] Confirm\n`);
 
-        const page = this.table.paginate(this.currentPage, this.pageSize);
-        console.log(page.render());
+        // Create a temporary table for rendering the current page
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = start + this.pageSize;
+        const pageRows = this.displayedRows.slice(start, end);
 
-        console.log(`\nPage ${this.currentPage} of ${Math.ceil(this.table.rows.length / this.pageSize)} | Items: ${this.table.rows.length}`);
+        // Clone table for view
+        const viewTable = new Table({
+            columns: this.table.columns.map(c => ({ ...c })),
+            theme: this.table.theme,
+            compact: this.table.compact,
+            terminalWidth: this.table.terminalWidth || process.stdout.columns || 80,
+            responsiveMode: this.table.responsiveMode
+        });
+
+        // Add rows with highlighting
+        // We need to clone the rows/cells to avoid mutating the original table
+        viewTable.rows = pageRows.map(row => {
+            const isSelected = this.selectedRows.has(row);
+            if (!isSelected) return row;
+
+            // Clone and highlight
+            const nextRow = new Row(row.getData(), viewTable);
+            nextRow.cells = row.cells.map(c => {
+                // Simple Green Color for Selection
+                return { ...c, content: `\x1b[32m${c.content}\x1b[0m` } as any;
+            });
+            return nextRow;
+        });
+
+        viewTable.footer = this.table.footer;
+
+        console.log(viewTable.render());
+
+        // Status Bar
+        const total = this.displayedRows.length;
+        const selectedCount = this.selectedRows.size;
+        const maxPage = Math.ceil(total / this.pageSize) || 1;
+
+        let status = `\nPage ${this.currentPage}/${maxPage} | Items: ${total}`;
+        if (selectedCount > 0) status += ` | \x1b[32mSelected: ${selectedCount}\x1b[0m`;
+        if (this.searchQuery) status += ` | Filter: "${this.searchQuery}"`;
+        if (this.sortColumnIndex >= 0) status += ` | Sort: ${this.table.columns[this.sortColumnIndex]?.name} (${this.sortDirection})`;
+
+        console.log(status);
+
+        // Search Prompt
+        if (this.mode === 'search') {
+            process.stdout.write(`\nSearch > ${this.searchQuery}`);
+        }
     }
 
     public stop(): void {
@@ -107,6 +288,7 @@ export class InteractiveTable {
             process.stdin.setRawMode(false);
         }
         this.rl.close();
-        process.exit(0);
+        if (this.onExit) this.onExit();
+        else process.exit(0);
     }
 }

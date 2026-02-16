@@ -3,6 +3,10 @@ export * from './Column';
 export * from './Row';
 export * from './Cell';
 export * from './LayoutManager';
+export * from './visuals/Sparkline';
+export * from './visuals/Heatmap';
+export * from './integrations/html';
+export * from './integrations/react'; // Exports 'h', 'React', etc.
 export * from './themes/Theme';
 export * from './renderers/IRenderer';
 export * from './renderers/StringRenderer';

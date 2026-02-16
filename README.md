@@ -15,13 +15,17 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 *   **Rich Styling**: ANSI color support for headers and columns (defaults to **Magenta** headers and **Cyan** keys).
 *   **Advanced Layouts**: `colSpan`, `rowSpan`, auto-sizing, word-wrap, and specific column widths.
 *   **Responsive**: Hide or stack columns on smaller screens based on priority.
-*   **Interactive TUI**: Built-in interactive mode for exploring large datasets with pagination and sorting.
+*   **Interactive TUI**: Built-in interactive mode for exploring large datasets with search, filtering, and row selection.
 *   **Data Visualization**:
+    *   **Sparklines & Heatmaps**: Visualize trends and data density directly in cells.
     *   **Tree View**: Visualize hierarchical data with automatic indentation.
     *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
     *   **Header Groups**: Spans multiple columns under a super-header.
     *   **Footers & Summaries**: Automatic sum/avg/count or custom footers.
-*   **Data Operations**: Built-in column sorting (`asc`/`desc`).
+*   **Data Operations**: Built-in column sorting (`asc`/`desc`) and aggregation (pivot tables).
+*   **Integrations**:
+    *   **HTML Scraper**: Parse HTML tables directly.
+    *   **JSX Support**: Define tables declaratively.
 *   **Streaming**: Efficiently render large datasets row-by-row.
 *   **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
 *   **CLI Tool**: Standalone executable to pipe JSON data into formatted tables.
@@ -64,9 +68,30 @@ import { Table, InteractiveTable } from 'cmd-table';
 const table = new Table();
 // ... add hundreds of rows ...
 
-// Start interactive mode (Handles keys: n/p for pages, s for sort, q for quit)
-new InteractiveTable(table, { pageSize: 15 }).start();
+// Advanced Usage: Handle Selection
+const interactive = new InteractiveTable(table, {
+    onSelect: (rows) => {
+        console.log('Selected:', rows);
+        process.exit(0);
+    },
+    onExit: () => process.exit(0)
+});
+
+interactive.start();
 ```
+
+### Interactive Controls
+
+| Key | Action |
+| :--- | :--- |
+| `Right` / `n` | Next Page |
+| `Left` / `p` | Previous Page |
+| `s` | Sort by Column (Cycle) |
+| `/` | **Search / Filter Rows** |
+| `Space` | **Select / Deselect Visible Rows** |
+| `Enter` | **Confirm Selection & Exit** |
+| `Esc` | Clear Search / Clear Selection |
+| `q` / `Ctrl+C` | Quit |
 
 To see it in action:
 ```bash
@@ -303,6 +328,69 @@ table.rows.forEach(row => {
 
 // 3. Build Your Own Renderer
 const myCustomString = table.rows.map(row => row.cells[0].content).join(' | ');
+```
+
+## 🎨 Visual Enhancements
+
+### Sparklines
+Render mini bar charts inside cells.
+```typescript
+import { Sparkline } from 'cmd-table';
+
+table.addRow({
+    history: Sparkline.generate([10, 50, 90, 40, 20]) // Output:  ▄█▄▂
+});
+```
+
+### Heatmaps
+Colorize values based on a range (Low=Red, Mid=Yellow, High=Green).
+```typescript
+import { Heatmap } from 'cmd-table';
+
+table.addRow({
+    efficiency: Heatmap.color(85, 0, 100) + '%' // Green text
+});
+```
+
+### Advanced Borders
+New themes are available:
+```typescript
+import { BUILTIN_THEMES } from 'cmd-table';
+
+const table = new Table({
+    theme: BUILTIN_THEMES.doubleHeader // Double lines for header, single for body
+    // or BUILTIN_THEMES.thinRounded
+});
+```
+
+## 🔌 Integrations
+
+### HTML Scraper
+Parse HTML tables directly into `cmd-table`. (Zero-dependency, regex-based).
+
+```typescript
+import { HtmlTable } from 'cmd-table';
+
+const html = `<table><tr><td>Data</td></tr></table>`;
+const table = HtmlTable.from(html);
+console.log(table.render());
+```
+
+### React / JSX Support
+Define tables using JSX syntax (works with any JSX runtime or our lightweight factory).
+
+```tsx
+import { h, render } from 'cmd-table';
+
+const element = (
+    <cmd-table theme="doubleHeader">
+        <cmd-column name="Task" key="task" />
+        <cmd-row task="Do Chores" />
+    </cmd-table>
+);
+
+const table = render(element);
+console.log(table.render());
 ```
 
 ## Contributing

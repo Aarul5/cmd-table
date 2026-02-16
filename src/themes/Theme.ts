@@ -93,7 +93,13 @@ export const BUILTIN_THEMES = {
     rounded: THEME_Rounded,
     doubleLine: THEME_DoubleLine,
     boldBox: THEME_BoldBox,
-    dots: THEME_Dots
+    dots: THEME_Dots,
+    doubleHeader: {
+        ...THEME_DEFAULT,
+        topBody: '═', topJoin: '╤', topLeft: '╒', topRight: '╕',
+        joinBody: '═', joinLeft: '╞', joinRight: '╡', joinJoin: '╪'
+    },
+    thinRounded: THEME_Rounded
 } as const satisfies Record<string, ITheme>;
 
 export type ThemeName = keyof typeof BUILTIN_THEMES;

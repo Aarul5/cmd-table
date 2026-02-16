@@ -4,10 +4,16 @@ import { Table } from './Table';
 export class Row {
     public cells: Cell[] = [];
     private table: Table;
+    private originalData: any;
 
     constructor(data: any[] | Record<string, any>, table: Table) {
         this.table = table;
+        this.originalData = data;
         this.parseData(data);
+    }
+
+    public getData(): any {
+        return this.originalData;
     }
 
     private parseData(data: any[] | Record<string, any>) {
