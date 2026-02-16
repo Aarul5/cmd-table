@@ -1,6 +1,10 @@
 import { Column, IColumnOptions } from './Column';
 import { Row } from './Row';
 import { StringRenderer } from './renderers/StringRenderer';
+import { CsvRenderer, CsvOptions } from './renderers/CsvRenderer';
+import { JsonRenderer } from './renderers/JsonRenderer';
+import { HtmlRenderer } from './renderers/HtmlRenderer';
+import { MarkdownRenderer } from './renderers/MarkdownRenderer';
 import { ITheme, THEME_DEFAULT, THEME_Rounded } from './themes/Theme';
 
 export interface ITableOptions {
@@ -110,6 +114,31 @@ export class Table {
     public render(): string {
         const renderer = new StringRenderer();
         return renderer.render(this);
+    }
+
+    public getPages(pageSize: number): Table[] {
+        const pages: Table[] = [];
+        const totalPages = Math.ceil(this.rows.length / pageSize);
+        for (let i = 1; i <= totalPages; i++) {
+            pages.push(this.paginate(i, pageSize));
+        }
+        return pages;
+    }
+
+    public export(format: 'csv' | 'json' | 'html' | 'md' | 'markdown', options: any = {}): string {
+        switch (format) {
+            case 'csv':
+                return new CsvRenderer(options as CsvOptions).render(this);
+            case 'json':
+                return new JsonRenderer().render(this);
+            case 'html':
+                return new HtmlRenderer().render(this);
+            case 'md':
+            case 'markdown':
+                return new MarkdownRenderer().render(this);
+            default:
+                throw new Error(`Unknown export format: ${format}`);
+        }
     }
 
     public static fromVertical(record: Record<string, any>, options: ITableOptions = {}): Table {

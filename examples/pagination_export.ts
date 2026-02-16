@@ -32,28 +32,27 @@ table.addRows(data);
 
 // --- Pagination ---
 const pageSize = 5;
-const totalPages = Math.ceil(table.rows.length / pageSize);
+const pages = table.getPages(pageSize);
 
-console.log(`1. Rendering ${totalPages} Pages (Programmatic Loop)`);
-for (let i = 1; i <= totalPages; i++) {
-    console.log(`\n--- Page ${i} of ${totalPages} ---`);
-    console.log(table.paginate(i, pageSize).render());
-}
+console.log(`1. Rendering ${pages.length} Pages (Using getPages)`);
+pages.forEach((page, index) => {
+    console.log(`\n--- Page ${index + 1} of ${pages.length} ---`);
+    console.log(page.render());
+});
 
-console.log('\n(Note: For interactive browsing of large datasets, use the InteractiveTable class!)\n');
+console.log('\n(Note: For interactive browsing, use InteractiveTable!)\n');
 
 
 // --- Exports ---
 console.log('2. Exports');
 
 console.log('--- CSV Export ---');
-const csv = new CsvRenderer().render(table);
-console.log(csv);
+console.log(table.export('csv'));
 console.log('\n');
 
 console.log('--- JSON Export (First 2 items) ---');
-const json = new JsonRenderer().render(table);
-// Pretty print just the first few items to avoid flooding console
+const json = table.export('json');
+// Pretty print just the first few items
 console.log(JSON.stringify(JSON.parse(json).slice(0, 2), null, 2));
 console.log('... (truncated)');
 console.log('\n');
@@ -64,11 +63,9 @@ const mdTable = new Table();
 mdTable.addColumn('Name');
 mdTable.addColumn('Role');
 mdTable.addRows(data.slice(0, 3));
-const md = new MarkdownRenderer().render(mdTable);
-console.log(md);
+console.log(mdTable.export('md'));
 console.log('\n');
 
 console.log('--- HTML Export (Snippet) ---');
-const html = new HtmlRenderer().render(mdTable); // Use smaller table for demo
-console.log(html);
+console.log(mdTable.export('html'));
 console.log('\n');

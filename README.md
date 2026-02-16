@@ -197,6 +197,10 @@ paginate your table data.
 // Get the first page with 10 rows per page
 const page1 = table.paginate(1, 10);
 console.log(page1.render());
+
+// OR get all pages at once
+const pages = table.getPages(10);
+pages.forEach(page => console.log(page.render()));
 ```
 
 ## Advanced Features
@@ -244,22 +248,22 @@ table.summarize(['Cost'], 'sum');
 
 ## Exports
 
-Export your table data to various formats.
+Export your table data to various formats using the simplified `export()` method.
 
 ```ts
-import { MarkdownRenderer, CsvRenderer, JsonRenderer, HtmlRenderer } from 'cmd-table';
-
 // Markdown
-const md = new MarkdownRenderer().render(table);
+const md = table.export('md');
 
 // CSV
-const csv = new CsvRenderer({ delimiter: ',', quote: '"' }).render(table);
+const csv = table.export('csv'); // uses comma delimiter by default
+// For custom options, use the renderer directly:
+// new CsvRenderer({ delimiter: ';' }).render(table)
 
 // JSON
-const json = new JsonRenderer().render(table);
+const json = table.export('json');
 
 // HTML
-const html = new HtmlRenderer().render(table);
+const html = table.export('html');
 ```
 
 ## Interactive Table (TUI)
