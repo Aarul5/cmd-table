@@ -297,6 +297,35 @@ Check the `examples/` folder for more usage patterns:
 *   [Streaming](examples/stream_test.ts)
 *   [Themes](examples/theme_test.ts)
 
+## Direct Access (Power Users)
+
+You are never locked into the "default" way of doing things. You have full access to the table's internal data structures.
+
+```ts
+const table = new Table();
+// ... add data ...
+
+// 1. Manually Sort Rows (Custom Logic)
+table.rows.sort((a, b) => {
+    // Access raw cell content directly
+    const valA = a.cells[1].content; 
+    const valB = b.cells[1].content;
+    return valA - valB;
+});
+
+// 2. Direct Cell Modification
+table.rows.forEach(row => {
+    const statusCell = row.cells[2];
+    if (statusCell.content === 'FAIL') {
+        // Manually wrap content in ANSI red
+        statusCell.content = `\x1b[31m${statusCell.content}\x1b[39m`; 
+    }
+});
+
+// 3. Build Your Own Renderer
+const myCustomString = table.rows.map(row => row.cells[0].content).join(' | ');
+```
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
