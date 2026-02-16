@@ -14,10 +14,14 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 *   **Modern Theming**: "Rounded" theme by default, plus `honeywell`, `void`, `double`, `dots`, and more.
 *   **Rich Styling**: ANSI color support for headers and columns (defaults to **Magenta** headers and **Cyan** keys).
 *   **Advanced Layouts**: `colSpan`, `rowSpan`, auto-sizing, word-wrap, and specific column widths.
+*   **Responsive**: Hide or stack columns on smaller screens based on priority.
 *   **Data Visualization**:
     *   **Tree View**: Visualize hierarchical data with automatic indentation.
     *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
-*   **Responsive**: Hide or stack columns on smaller screens.
+    *   **Header Groups**: Spans multiple columns under a super-header.
+    *   **Footers & Summaries**: Automatic sum/avg/count or custom footers.
+*   **Data Operations**: Built-in column sorting (`asc`/`desc`).
+*   **Streaming**: Efficiently render large datasets row-by-row.
 *   **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
 *   **CLI Tool**: Standalone executable to pipe JSON data into formatted tables.
 
@@ -171,6 +175,61 @@ cat data.json | npx cmd-table
 
 # Specify columns and theme
 cat data.json | npx cmd-table --columns=name,age --theme=double
+```
+
+### Data Operations (Sorting)
+
+Sort the table by a specific column.
+
+```ts
+// Sort by 'Name' in ascending order
+table.sort('Name');
+
+// Sort by 'Age' in descending order
+table.sort('Age', 'desc');
+```
+
+## Advanced Features
+
+### Responsive Layouts
+
+Make your tables adapt to different terminal widths.
+
+```ts
+const table = new Table({
+  terminalWidth: process.stdout.columns || 80,
+  responsiveMode: 'hide', // or 'stack'
+});
+
+// 'hide': Low priority columns are hidden if they don't fit.
+// 'stack': Table converts to a vertical list view if it doesn't fit.
+table.addColumn({ name: 'ID', priority: 1 }); // High priority
+table.addColumn({ name: 'Description', priority: 0 }); // Low priority
+```
+
+### Header Groups
+
+Group multiple columns under a "super-header".
+
+```ts
+const table = new Table({
+  headerGroups: [
+    { title: 'Identity', colSpan: 2 }, // Spans 'Name' and 'Role'
+    { title: 'Performance', colSpan: 2 } // Spans 'Score' and 'Grade'
+  ]
+});
+```
+
+### Footers & Summaries
+
+Add a footer row manually or calculate summaries.
+
+```ts
+// Manual Footer
+table.setFooter({ Name: 'Total', Cost: '100.00' });
+
+// Automatic Summary (Sum, Avg, Count)
+table.summarize(['Cost'], 'sum');
 ```
 
 ## Exports

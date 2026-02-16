@@ -118,6 +118,38 @@ export class Table {
         return table;
     }
 
+    public sort(columnName: string, direction: 'asc' | 'desc' = 'asc'): this {
+        const colIndex = this.columns.findIndex((c) => c.name === columnName || c.key === columnName);
+        if (colIndex === -1) return this;
+
+        this.rows.sort((a, b) => {
+            const cellA = a.cells[colIndex];
+            const cellB = b.cells[colIndex];
+            const valA = cellA ? cellA.content : '';
+            const valB = cellB ? cellB.content : '';
+
+            if (valA === valB) return 0;
+            if (valA === null || valA === undefined) return 1;
+            if (valB === null || valB === undefined) return -1;
+
+            const numA = Number(valA);
+            const numB = Number(valB);
+
+            if (!isNaN(numA) && !isNaN(numB)) {
+                return direction === 'asc' ? numA - numB : numB - numA;
+            }
+
+            const strA = String(valA).toLowerCase();
+            const strB = String(valB).toLowerCase();
+
+            if (strA < strB) return direction === 'asc' ? -1 : 1;
+            if (strA > strB) return direction === 'asc' ? 1 : -1;
+            return 0;
+        });
+
+        return this;
+    }
+
     public static fromCross<T extends string | number>(
         rowHeader: string,
         columnHeaders: T[],
