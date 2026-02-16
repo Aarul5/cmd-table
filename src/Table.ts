@@ -83,7 +83,7 @@ export class Table {
                 .map((row) => Number(row.cells[colIndex]?.content))
                 .filter((value) => Number.isFinite(value));
             if (op === 'count') footer[name] = values.length;
-            else if (op === 'avg') footer[name] = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+            else if (op === 'avg') footer[name] = values.length ? Number((values.reduce((a, b) => a + b, 0) / values.length).toFixed(2)) : 0;
             else footer[name] = values.reduce((a, b) => a + b, 0);
         });
         this.footer = footer;
