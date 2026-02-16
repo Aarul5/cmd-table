@@ -189,6 +189,16 @@ table.sort('Name');
 table.sort('Age', 'desc');
 ```
 
+### Pagination
+
+paginate your table data.
+
+```ts
+// Get the first page with 10 rows per page
+const page1 = table.paginate(1, 10);
+console.log(page1.render());
+```
+
 ## Advanced Features
 
 ### Responsive Layouts
@@ -237,10 +247,40 @@ table.summarize(['Cost'], 'sum');
 Export your table data to various formats.
 
 ```ts
-import { MarkdownRenderer, CsvRenderer } from 'cmd-table';
+import { MarkdownRenderer, CsvRenderer, JsonRenderer, HtmlRenderer } from 'cmd-table';
 
+// Markdown
 const md = new MarkdownRenderer().render(table);
-const csv = new CsvRenderer().render(table);
+
+// CSV
+const csv = new CsvRenderer({ delimiter: ',', quote: '"' }).render(table);
+
+// JSON
+const json = new JsonRenderer().render(table);
+
+// HTML
+const html = new HtmlRenderer().render(table);
+```
+
+## Interactive Table (TUI)
+
+Build interactive terminal interfaces using `cmd-table`.
+
+Use the built-in `InteractiveTable` class for instant pagination and sorting features without boilerplate.
+
+```ts
+import { Table, InteractiveTable } from 'cmd-table';
+
+const table = new Table();
+// ... add columns and rows ...
+
+// Start interactive mode (Handles keys: n/p for pages, s for sort, q for quit)
+new InteractiveTable(table, { pageSize: 10 }).start();
+```
+
+To see it in action:
+```bash
+npx ts-node examples/interactive_table.ts
 ```
 
 ## Contributing
