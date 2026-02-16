@@ -86,7 +86,7 @@ export class Table {
     }
 
     public summarize(columns: string[], op: 'sum' | 'avg' | 'count' = 'sum'): this {
-        const footer: Record<string, any> = {};
+        const footer: Record<string, any> = this.footer && !Array.isArray(this.footer) ? { ...this.footer } : {};
         columns.forEach((name) => {
             const colIndex = this.columns.findIndex((c) => c.name === name || c.key === name);
             if (colIndex < 0) return;
