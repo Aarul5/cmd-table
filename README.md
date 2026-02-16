@@ -270,22 +270,32 @@ const html = table.export('html');
 
 Build interactive terminal interfaces using `cmd-table`.
 
-Use the built-in `InteractiveTable` class for instant pagination and sorting features without boilerplate.
+Use the built-in `InteractiveTable` class for instant pagination and sorting features without boilerplate. **This is the recommended way to display large datasets.**
 
 ```ts
 import { Table, InteractiveTable } from 'cmd-table';
 
 const table = new Table();
-// ... add columns and rows ...
+// ... add hundreds of rows ...
 
 // Start interactive mode (Handles keys: n/p for pages, s for sort, q for quit)
-new InteractiveTable(table, { pageSize: 10 }).start();
+new InteractiveTable(table, { pageSize: 15 }).start();
 ```
 
 To see it in action:
 ```bash
 npx ts-node examples/interactive_table.ts
+npx ts-node examples/large_table.ts
 ```
+
+## More Examples
+
+Check the `examples/` folder for more usage patterns:
+*   [Basic Usage](examples/basic.ts)
+*   [Advanced Visualization](examples/advanced_viz.ts) (Trees, Auto-Merge)
+*   [Exports & Pagination](examples/pagination_export.ts)
+*   [Streaming](examples/stream_test.ts)
+*   [Themes](examples/theme_test.ts)
 
 ## Contributing
 

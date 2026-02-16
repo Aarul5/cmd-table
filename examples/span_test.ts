@@ -1,4 +1,4 @@
-import { Table, Cell } from '../src';
+import { Table } from '../src';
 
 const table = new Table();
 

@@ -1,5 +1,5 @@
-import { Table } from '../src';
 import {
+    Table,
     getTheme,
     THEME_Honeywell,
     THEME_Rounded,
@@ -7,7 +7,7 @@ import {
     THEME_BoldBox,
     THEME_Dots,
     THEME_Void
-} from '../src/themes/Theme';
+} from '../src';
 
 function demo(name: string, theme?: any): void {
     console.log(`--- ${name} ---`);

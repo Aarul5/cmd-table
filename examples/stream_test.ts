@@ -1,5 +1,4 @@
-import { Table } from '../src';
-import { StreamRenderer } from '../src/renderers/StreamRenderer';
+import { Table, StreamRenderer } from '../src';
 
 const table = new Table();
 table.addColumn({ name: 'ID', width: 5 });

@@ -1,4 +1,4 @@
-import { Table } from '../src';
+import { Table, InteractiveTable } from '../src';
 
 const table = new Table();
 
@@ -29,8 +29,7 @@ for (let i = 1; i <= 100; i++) {
     ]);
 }
 
-console.log(`Rendering table with ${table.rows.length} rows...`);
-const start = Date.now();
-console.log(table.render());
-const end = Date.now();
-console.log(`Rendered in ${end - start}ms`);
+console.log(`Generated table with ${table.rows.length} rows.`);
+console.log('Starting interactive mode... (Press q to quit, s to sort, arrow keys to navigate)');
+
+new InteractiveTable(table, { pageSize: 15 }).start();
