@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
+    base: '/cmd-table/',
     title: "cmd-table",
     description: "Enterprise-grade CLI tables for Node.js",
     themeConfig: {
