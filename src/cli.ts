@@ -13,12 +13,15 @@ args.forEach(arg => {
         console.log(`
 Usage:
   cat data.json | cmd-table [options]
+  cat data.csv  | cmd-table [options]
 
 Options:
-  --help, -h      Show this help message
-  --theme=NAME    Set table theme (rounded, honeywell, double, etc.)
-  --columns=...   Comma-separated list of columns to show
-  --headerColor   Color for header text
+  --help, -h        Show this help message
+  --theme=NAME      Set table theme (rounded, honeywell, double, etc.)
+  --columns=...     Comma-separated list of columns to show
+  --headerColor     Color for header text
+  --format=FORMAT   Input format: json or csv (auto-detected if omitted)
+  --interactive     Launch interactive TUI mode for browsing data
 `);
         process.exit(0);
     }

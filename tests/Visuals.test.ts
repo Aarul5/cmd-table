@@ -37,8 +37,27 @@ describe('Heatmap', () => {
         expect(high).toContain('\x1b[32m'); // Green
     });
 
-    it('should handle background coloring', () => {
+    it('should handle background coloring (low)', () => {
         const val = Heatmap.color(20, 0, 100, 'bg');
         expect(val).toContain('\x1b[41m'); // BG Red
+    });
+
+    it('should handle background coloring (high)', () => {
+        const val = Heatmap.color(80, 0, 100, 'bg');
+        expect(val).toContain('\x1b[42m'); // BG Green
+    });
+
+    it('should handle zero range (min === max)', () => {
+        const val = Heatmap.color(50, 50, 50);
+        expect(val).toContain('50');
+        // normalized is 0.5, so should be Yellow
+        expect(val).toContain('\x1b[33m');
+    });
+
+    it('autoColor() should color an array of numbers', () => {
+        const colored = Heatmap.autoColor([10, 50, 90]);
+        expect(colored).toHaveLength(3);
+        expect(colored[0]).toContain('\x1b[31m'); // Low = Red
+        expect(colored[2]).toContain('\x1b[32m'); // High = Green
     });
 });
