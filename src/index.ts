@@ -6,6 +6,8 @@ export * from './LayoutManager';
 export * from './visuals/Sparkline';
 export * from './visuals/Heatmap';
 export * from './integrations/html';
+export * from './integrations/csv';
+export * from './integrations/json';
 export * from './integrations/react'; // Exports 'h', 'React', etc.
 export * from './themes/Theme';
 export * from './renderers/IRenderer';
