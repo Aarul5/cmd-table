@@ -99,6 +99,22 @@ npx ts-node examples/interactive_table.ts
 npx ts-node examples/large_table.ts
 ```
 
+### Async Data (Pagination)
+
+For very large datasets (databases, APIs), use `AsyncInteractiveTable` with an `IDataSource`.
+
+```ts
+import { AsyncInteractiveTable, IDataSource } from 'cmd-table';
+
+class MyApi implements IDataSource {
+    async count() { return 1000; }
+    async getRows(offset, limit) { return fetch(`/api/data?skip=${offset}&take=${limit}`); }
+}
+
+const app = new AsyncInteractiveTable(new MyApi(), new Table());
+app.start();
+```
+
 ## Core Features
 
 ### Styling & Themes
@@ -295,10 +311,17 @@ const stream = new StreamRenderer(table);
 
 ## CLI Tool
 
-Format JSON data directly from the terminal.
+Format JSON / CSV data directly from the terminal.
 
 ```bash
+# Format JSON
 cat data.json | npx cmd-table --columns=name,age --theme=double
+
+# Format CSV (Auto-detected)
+cat data.csv | npx cmd-table
+
+# Interactive Explorer (TUI)
+cat large_data.csv | npx cmd-table --interactive
 ```
 
 ## Direct Access (Power Users)

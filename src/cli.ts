@@ -51,21 +51,53 @@ async function main() {
     try {
         const input = await readStdin();
         if (!input) {
-            console.error('No input provided. Pipe JSON data to this tool.');
+            console.error('No input provided. Pipe JSON/CSV data to this tool.');
             process.exit(1);
         }
 
-        let data: any[];
+        let data: any[] = [];
+        let isCsv = options.format === 'csv';
+
+        // Auto-detect CSV if not specified
+        if (!options.format && input.trim().startsWith('{') === false && input.trim().startsWith('[') === false) {
+            // Heuristic: if it doesn't look like JSON, assume CSV
+            isCsv = true;
+        }
+
+        if (isCsv) {
+            // Import lazily or use existing import
+            const { CsvTable } = require('./integrations/csv');
+            const table = CsvTable.from(input, { hasHeader: true, delimiter: ',' });
+
+            // Extract raw data from table for interactive mode? 
+            // Actually CsvTable.from returns a Table with Rows.
+            // For interactive mode we might need raw data array if we want to use AsyncInteractiveTable 
+            // OR we use the InteractiveTable (sync) for piped data since it's already in memory.
+
+            if (options.interactive) {
+                const { InteractiveTable } = require('./InteractiveTable');
+                const interactive = new InteractiveTable(table, {
+                    pageSize: 10,
+                    onExit: () => process.exit(0)
+                });
+                interactive.start();
+                return;
+            }
+
+            console.log(table.render());
+            return;
+        }
+
+        // JSON handling
         try {
             data = JSON.parse(input);
         } catch (e) {
-            console.error('Failed to parse JSON input.');
+            console.error('Failed to parse input as JSON. Use --format=csv for CSV data.');
             process.exit(1);
         }
 
         if (!Array.isArray(data)) {
             if (typeof data === 'object') {
-                // Convert single object to array?
                 data = [data];
             } else {
                 console.error('Input must be a JSON array or object.');
@@ -92,13 +124,18 @@ async function main() {
             table.headerColor = options.headerColor;
         }
 
-        data.forEach(row => {
-            // If columns defined, map strictly? 
-            // The Table.addRow accepts generic object, so it handles mapping by key/name match.
-            table.addRow(row);
-        });
+        data.forEach(row => table.addRow(row));
 
-        console.log(table.render());
+        if (options.interactive) {
+            const { InteractiveTable } = require('./InteractiveTable');
+            const interactive = new InteractiveTable(table, {
+                pageSize: 10,
+                onExit: () => process.exit(0)
+            });
+            interactive.start();
+        } else {
+            console.log(table.render());
+        }
 
     } catch (err) {
         console.error('Error:', err);
