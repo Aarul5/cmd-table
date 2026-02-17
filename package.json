@@ -1,6 +1,6 @@
 {
   "name": "cmd-table",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "A modern, feature-rich CLI table library for Node.js with responsive layouts and streaming.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
