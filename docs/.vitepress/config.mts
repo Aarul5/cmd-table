@@ -6,8 +6,7 @@ export default defineConfig({
     themeConfig: {
         nav: [
             { text: 'Home', link: '/' },
-            { text: 'Guide', link: '/guide/getting-started' },
-            { text: 'API', link: '/api/' }
+            { text: 'Guide', link: '/guide/getting-started' }
         ],
 
         sidebar: [
@@ -27,10 +26,11 @@ export default defineConfig({
                 ]
             },
             {
-                text: 'Interactvity',
+                text: 'Interactivity',
                 items: [
                     { text: 'Interactive TUI', link: '/guide/interactive' },
-                    { text: 'Async Loading', link: '/guide/async' }
+                    { text: 'Async & SQL', link: '/guide/async' },
+                    { text: 'SQL Integration', link: '/guide/sql' }
                 ]
             },
             {
@@ -38,7 +38,14 @@ export default defineConfig({
                 items: [
                     { text: 'Visualizations', link: '/guide/visuals' },
                     { text: 'Integrations', link: '/guide/integrations' },
-                    { text: 'Exporting', link: '/guide/exports' }
+                    { text: 'Exporting', link: '/guide/exports' },
+                    { text: 'CLI Tool', link: '/guide/cli' }
+                ]
+            },
+            {
+                text: 'Reference',
+                items: [
+                    { text: 'API Quick Reference', link: '/guide/api' }
                 ]
             }
         ],
