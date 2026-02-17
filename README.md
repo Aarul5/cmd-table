@@ -376,6 +376,22 @@ const table = HtmlTable.from(html);
 console.log(table.render());
 ```
 
+### Data Exports
+Export tables to standard formats using dedicated helpers (symmetric to `from` methods).
+
+```typescript
+import { HtmlTable, CsvTable, JsonTable } from 'cmd-table';
+
+// Export to HTML string
+const html = HtmlTable.toHtml(table);
+
+// Export to CSV string
+const csv = CsvTable.toCsv(table);
+
+// Export to JSON string
+const json = JsonTable.toJson(table);
+```
+
 ### React / JSX Support
 Define tables using JSX syntax (works with any JSX runtime or our lightweight factory).
 
