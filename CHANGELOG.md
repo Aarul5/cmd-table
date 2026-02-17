@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.1.0] - 2026-02-17
+
+### Major Features
+-   **Async Interactive Table**: Handle large datasets via `AsyncInteractiveTable` and `IDataSource` (paginated loading).
+-   **CLI Enhancements**: Added `--interactive` flag for piped data and auto-detection for CSV input.
+
 ## [1.0.0] - 2026-02-16
 
 ### Major Features
