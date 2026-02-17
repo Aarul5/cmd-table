@@ -24,11 +24,13 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
     *   **Footers & Summaries**: Automatic sum/avg/count or custom footers.
 *   **Data Operations**: Built-in column sorting (`asc`/`desc`) and aggregation (pivot tables).
 *   **Integrations**:
+    *   **SQL / SQLite**: Browse database tables with `SqlDataSource` adapter.
+    *   **CSV Parser**: Parse CSV strings into tables with `CsvTable.from()`.
     *   **HTML Scraper**: Parse HTML tables directly.
     *   **JSX Support**: Define tables declaratively.
 *   **Streaming**: Efficiently render large datasets row-by-row.
 *   **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
-*   **CLI Tool**: Standalone executable to pipe JSON data into formatted tables.
+*   **CLI Tool**: Standalone executable to pipe JSON / CSV data into formatted tables.
 
 ## Installation
 
@@ -113,6 +115,38 @@ class MyApi implements IDataSource {
 
 const app = new AsyncInteractiveTable(new MyApi(), new Table());
 app.start();
+```
+
+### SQL / SQLite Integration
+
+Browse real database tables interactively using the built-in `SqlDataSource` adapter (requires `better-sqlite3`).
+
+```bash
+npm install better-sqlite3
+```
+
+```ts
+import Database from 'better-sqlite3';
+import { Table, AsyncInteractiveTable, SqlDataSource } from 'cmd-table';
+
+const db = new Database('mydata.db');
+const source = new SqlDataSource(db, 'employees');
+
+const template = new Table();
+template.addColumn('id');
+template.addColumn('name');
+template.addColumn('department');
+
+const app = new AsyncInteractiveTable(source, template);
+await app.start();
+db.close();
+```
+
+`SqlDataSource` supports pagination, column sorting, and full-text search across all columns.
+
+To run the included demo:
+```bash
+npx ts-node examples/sqlite_demo.ts
 ```
 
 ## Core Features
@@ -387,6 +421,20 @@ const table = new Table({
 ```
 
 ## 🔌 Integrations
+
+### CSV Parser
+Parse CSV strings directly into tables — supports headers, quoted fields, custom delimiters, and CRLF.
+
+```typescript
+import { CsvTable } from 'cmd-table';
+
+const csv = 'name,age\nAlice,30\nBob,25';
+const table = CsvTable.from(csv);
+console.log(table.render());
+
+// Custom delimiter
+const tsv = CsvTable.from(tsvData, { delimiter: '\t' });
+```
 
 ### HTML Scraper
 Parse HTML tables directly into `cmd-table`. (Zero-dependency, regex-based).

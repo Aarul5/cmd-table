@@ -1,4 +1,8 @@
 # Changelog
+## [1.2.1] - 2026-02-17
+### Enhancements
+-   **Documentation**: Updated README with SQL Integration guide, CSV Parser examples, and revised feature list.
+
 
 ## [1.2.0] - 2026-02-17
 
