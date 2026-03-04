@@ -34,6 +34,29 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 *   **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
 *   **CLI Tool**: Standalone executable to pipe JSON / CSV data into formatted tables.
 
+## Why cmd-table?
+
+cmd-table is the most feature-rich CLI table library for Node.js — with zero production dependencies. The top alternatives are either stagnant or lack modern features.
+
+| Feature | cmd-table | cli-table3 | table | tty-table |
+| :--- | :---: | :---: | :---: | :---: |
+| Zero dependencies | **Yes** | No | No | No |
+| Interactive TUI (search, filter, select) | **Yes** | No | No | No |
+| Async pagination (databases, APIs) | **Yes** | No | No | No |
+| SQL / SQLite integration | **Yes** | No | No | No |
+| Sparklines & Heatmaps | **Yes** | No | No | No |
+| Tree view | **Yes** | No | No | No |
+| Pivot tables & CrossTabs | **Yes** | No | No | No |
+| CSV / HTML parser (built-in) | **Yes** | No | No | No |
+| JSX / React syntax | **Yes** | No | No | No |
+| Header groups & footers | **Yes** | No | No | No |
+| Streaming renderer | **Yes** | No | Yes | No |
+| Multiple export formats | **Yes** | No | No | No |
+| Auto-merge cells | **Yes** | No | No | No |
+| Responsive layouts | **Yes** | No | No | Yes |
+| TypeScript-first | **Yes** | Partial | Yes | No |
+| Actively maintained (2025) | **Yes** | No | No | Yes |
+
 ## Installation
 
 ```bash
@@ -481,6 +504,49 @@ const element = (
 const table = render(element);
 console.log(table.render());
 ```
+
+## Roadmap
+
+### Shipped
+
+| Feature | Version | Status |
+| :--- | :--- | :--- |
+| Core table rendering with themes | v1.0.0 | Done |
+| Interactive TUI (search, filter, select) | v1.0.0 | Done |
+| Sparklines & Heatmaps | v1.0.0 | Done |
+| Pivot tables & CrossTabs | v1.0.0 | Done |
+| HTML scraper & JSX support | v1.0.0 | Done |
+| Exports (Markdown, CSV, JSON, HTML) | v1.0.0 | Done |
+| Responsive layouts | v1.0.0 | Done |
+| Streaming renderer | v1.0.0 | Done |
+| Header groups & footers | v1.0.0 | Done |
+| Auto-merge cells | v1.0.0 | Done |
+| Tree view | v1.0.0 | Done |
+| Async Interactive Table & IDataSource | v1.1.0 | Done |
+| CLI tool with `--interactive` flag | v1.1.0 | Done |
+| SQL / SQLite integration | v1.2.0 | Done |
+| CSV parser (`CsvTable.from()`) | v1.2.0 | Done |
+| 162 tests, 16 modules at 100% coverage | v1.2.0 | Done |
+| VitePress documentation site | v1.2.2 | Done |
+
+### Planned
+
+| Feature | Priority | Status |
+| :--- | :--- | :--- |
+| Progress bars in cells | High | Planned |
+| Per-column formatter callbacks | High | Planned |
+| Conditional row coloring / zebra striping | High | Planned |
+| Border control hooks (`drawHorizontalLine`) | High | Planned |
+| Dual ESM/CJS exports | High | Planned |
+| Diff table (side-by-side comparison) | Medium | Planned |
+| Transposed table (`table.transpose()`) | Medium | Planned |
+| Emoji/icon width support | Medium | Planned |
+| Browser console rendering | Medium | Planned |
+| Gantt-chart rows | Medium | Planned |
+| YAML export | Medium | Planned |
+| `cmd-table-jest-reporter` | Medium | Planned |
+| `cmd-table-vitest-reporter` | Medium | Planned |
+| npm provenance / trusted publishing | High | Planned |
 
 ## Contributing
 

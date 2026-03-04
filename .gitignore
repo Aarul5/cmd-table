@@ -23,3 +23,5 @@ Thumbs.db
 .env.local
 requirement.md
 Features.md
+.claude/
+ROADMAP.md
