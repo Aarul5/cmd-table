@@ -39,7 +39,30 @@
     "nested",
     "merge",
     "ansi",
-    "pretty-print"
+    "pretty-print",
+    "cli-table",
+    "cli-table3",
+    "command-line",
+    "format",
+    "formatter",
+    "tui",
+    "interactive",
+    "sparkline",
+    "heatmap",
+    "pivot",
+    "pivot-table",
+    "sqlite",
+    "sql",
+    "zero-dependency",
+    "lightweight",
+    "typescript",
+    "border",
+    "box",
+    "pagination",
+    "sorting",
+    "jsx",
+    "react",
+    "export"
   ],
   "author": {
     "name": "Arul",
@@ -52,7 +75,7 @@
   "bugs": {
     "url": "https://github.com/Aarul5/cmd-table/issues"
   },
-  "homepage": "https://github.com/Aarul5/cmd-table#readme",
+  "homepage": "https://aarul5.github.io/cmd-table/",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
