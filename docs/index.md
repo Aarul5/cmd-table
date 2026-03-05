@@ -4,7 +4,7 @@ layout: home
 hero:
   name: "cmd-table"
   text: "Enterprise CLI Tables"
-  tagline: Zero-dependency, feature-rich CLI table library for Node.js
+  tagline: Standalone, lightweight, and feature-rich CLI table library for Node.js
   actions:
     - theme: brand
       text: Get Started
@@ -14,7 +14,7 @@ hero:
       link: https://github.com/Aarul5/cmd-table
 
 features:
-  - title: 🚀 Zero Dependencies
+  - title: 🚀 Standalone & Lightweight
     details: No heavy node_modules. Pure TypeScript, ships only what you need.
   - title: 🖥️ Interactive TUI
     details: Built-in search, filtering, pagination, sorting, and row selection — all keyboard-driven.
