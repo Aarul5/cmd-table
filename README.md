@@ -12,7 +12,7 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 
 ## Features
 
-*   **Zero Dependencies**: Lightweight and fast.
+*   **Standalone & Lightweight**: Nothing extra to install.
 *   **Modern Theming**: "Rounded" theme by default, plus `honeywell`, `void`, `double`, `dots`, and more.
 *   **Rich Styling**: ANSI color support for headers and columns (defaults to **Magenta** headers and **Cyan** keys).
 *   **Advanced Layouts**: `colSpan`, `rowSpan`, auto-sizing, word-wrap, and specific column widths.
@@ -40,7 +40,7 @@ cmd-table is the most feature-rich CLI table library for Node.js — with zero p
 
 | Feature | cmd-table | cli-table3 | table | tty-table |
 | :--- | :---: | :---: | :---: | :---: |
-| Zero dependencies | **Yes** | No | No | No |
+| Standalone & lightweight | **Yes** | No | No | No |
 | Interactive TUI (search, filter, select) | **Yes** | No | No | No |
 | Async pagination (databases, APIs) | **Yes** | No | No | No |
 | SQL / SQLite integration | **Yes** | No | No | No |
