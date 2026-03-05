@@ -326,7 +326,13 @@ export class StringRenderer implements IRenderer {
             const metrics = this.getSpanMetrics(columns, widths, col, gridCell.realColSpan, joinWidth);
             const wrapWord = column?.wrapWord ?? true;
             const truncate = column?.truncate ?? '...';
-            const lines = this.wrapCell(gridCell.cell.getString(), metrics.contentWidth, wrapWord, truncate);
+            // Apply per-column formatter if defined.
+            // gridCell.y >= 0 ensures the header row (y = -1) is never formatted.
+            let rawContent = gridCell.cell.getString();
+            if (column?.formatter && gridCell.y >= 0) {
+                rawContent = String(column.formatter(rawContent, gridCell.y));
+            }
+            const lines = this.wrapCell(rawContent, metrics.contentWidth, wrapWord, truncate);
             cellLines.push({
                 x: col,
                 span: gridCell.realColSpan,
