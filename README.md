@@ -546,7 +546,6 @@ console.log(table.render());
 | YAML export | Medium | Planned |
 | `cmd-table-jest-reporter` | Medium | Planned |
 | `cmd-table-vitest-reporter` | Medium | Planned |
-| npm provenance / trusted publishing | High | Planned |
 
 ## Contributing
 
