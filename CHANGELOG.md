@@ -1,5 +1,51 @@
 # Changelog
+
+## [1.3.0] - 2026-03-05
+
+### New Features
+
+-   **Per-column formatter callbacks**: Added `formatter?: (value: any, rowIndex: number) => string` to `IColumnOptions` and `Column`. Transforms a cell's raw value before rendering — useful for currency formatting, date display, boolean icons, and any value-to-string conversion. The header row is never passed through the formatter.
+
+    ```ts
+    table.addColumn({
+      name: 'Price', key: 'price',
+      formatter: (v) => '$' + Number(v).toFixed(2),
+    });
+    ```
+
+-   **`ProgressBar` visual utility**: New `ProgressBar.generate(value, max?, options?)` class in `src/visuals/ProgressBar.ts`, exported from the public API alongside `Sparkline` and `Heatmap`. Generates Unicode block-character progress bars for embedding inside table cells via a formatter.
+
+    ```ts
+    import { Table, ProgressBar } from 'cmd-table';
+
+    table.addColumn({
+      name: 'Coverage', key: 'coverage',
+      minWidth: 15,
+      formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
+    });
+    // │ core │ ████████░░ 82% │
+    // │ cli  │ ████░░░░░░ 47% │
+    ```
+
+    **`ProgressBar` options:**
+
+    | Option | Type | Default | Description |
+    |--------|------|---------|-------------|
+    | `width` | `number` | `10` | Bar character width |
+    | `filled` | `string` | `'█'` | Filled portion character |
+    | `empty` | `string` | `'░'` | Empty portion character |
+    | `showPercent` | `boolean` | `true` | Append `65%` label |
+    | `label` | `string` | auto | Override with custom label e.g. `'3/5'` |
+
+### Test Coverage
+
+-   Added `tests/formatter.test.ts` — 7 tests covering value transformation, header protection, row-index delivery, conditional formatting, and color interop.
+-   Added `tests/progressbar.test.ts` — 13 tests (11 unit + 2 table integration). `ProgressBar.ts` at **100% statements / 100% branches / 100% functions**.
+-   Total test suite: **183 tests, 20 suites** (up from 170/18).
+
+
 ## [1.2.1] - 2026-02-17
+
 ### Enhancements
 -   **Documentation**: Updated README with SQL Integration guide, CSV Parser examples, and revised feature list.
 
