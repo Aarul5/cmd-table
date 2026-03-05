@@ -13,12 +13,14 @@ Every column accepts these configuration options:
 | `maxWidth` | `number` | — | Maximum width before truncation |
 | `align` | `'left' \| 'right' \| 'center'` | `'left'` | Horizontal text alignment |
 | `color` | `ColorName` | — | ANSI color for cell content |
+| `formatter` | `(value: any, rowIndex: number) => string` | — | Transform the cell value before rendering |
 | `hidden` | `boolean` | `false` | Hide this column from output |
 | `priority` | `number` | `0` | Responsive priority (higher = hidden first) |
 | `wrapWord` | `boolean` | `false` | Enable word wrapping for long content |
 | `truncate` | `string` | `'…'` | Truncation character when content overflows |
 | `paddingLeft` | `number` | `1` | Left padding (spaces) |
 | `paddingRight` | `number` | `1` | Right padding (spaces) |
+
 
 ## Examples
 
@@ -214,3 +216,78 @@ table.addColumn({ name: 'Internal ID', hidden: true });
 ```
 
 The column data is still stored — it's just not rendered. Useful for export or programmatic access.
+
+## Column Formatters
+
+The `formatter` callback transforms a cell's raw value **before** it is word-wrapped and rendered. Use it for number formatting, date display, boolean icons, conditional text, and more.
+
+```ts
+(value: any, rowIndex: number) => string
+```
+
+- `value` — the raw cell content as a string
+- `rowIndex` — zero-based index of the data row (header is never formatted)
+
+### Examples
+
+#### Currency
+
+```ts
+table.addColumn({
+    name: 'Price',
+    key: 'price',
+    align: 'right',
+    minWidth: 10,
+    formatter: (v) => '$' + Number(v).toFixed(2),
+});
+// $9.50, $100.00, $0.99
+```
+
+#### Boolean Icons
+
+```ts
+table.addColumn({
+    name: 'Active',
+    key: 'active',
+    align: 'center',
+    formatter: (v) => v === 'true' ? '✅' : '❌',
+});
+```
+
+#### Conditional per-row styling
+
+```ts
+table.addColumn({
+    name: 'Score',
+    key: 'score',
+    align: 'right',
+    formatter: (v, i) => {
+        const n = Number(v);
+        if (n >= 90) return `🟢 ${n}`;
+        if (n >= 60) return `🟡 ${n}`;
+        return `🔴 ${n}`;
+    },
+});
+```
+
+#### Inline Progress Bar (using `ProgressBar`)
+
+```ts
+import { ProgressBar } from 'cmd-table';
+
+table.addColumn({
+    name: 'Coverage',
+    key: 'coverage',
+    minWidth: 15,
+    formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
+});
+// ████████░░ 82%
+```
+
+::: tip
+Always set `minWidth` on columns using a formatter so the formatted value isn't word-wrapped onto multiple lines.
+:::
+
+::: info Header protection
+The formatter is **never** applied to the column header row. Column names are always rendered as-is.
+:::

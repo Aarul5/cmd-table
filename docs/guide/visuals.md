@@ -86,7 +86,74 @@ Apply heatmap coloring automatically to an entire column:
 ```ts
 const scores = [23, 67, 89, 45, 12, 95];
 const colored = Heatmap.autoColor(scores, 0, 100);
-// Returns: ['23' (red), '67' (yellow), '89' (green), ...]
+// Returns: ['23' (red), '67' (yellow), '89' (green), ...]\n```
+
+## Progress Bars
+
+Render inline Unicode block-character progress bars — perfect for CI coverage, disk usage, task completion, or any metric that benefits from a visual indicator.
+
+`ProgressBar` is designed to pair with the [`formatter` column option](./columns.md#column-formatters) so the bar is generated automatically for every row.
+
+```ts
+import { Table, ProgressBar } from 'cmd-table';
+
+const t = new Table();
+t.addColumn({ name: 'Module', key: 'module' });
+t.addColumn({
+    name: 'Coverage',
+    key: 'coverage',
+    minWidth: 15,
+    align: 'right',
+    formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
+});
+
+t.addRow({ module: 'core',    coverage: 82 });
+t.addRow({ module: 'cli',     coverage: 47 });
+t.addRow({ module: 'plugins', coverage: 100 });
+
+console.log(t.render());
+```
+
+**Expected output:**
+```
+╭─────────┬─────────────────╮
+│ Module  │ Coverage        │
+├─────────┼─────────────────┤
+│ core    │ ████████░░ 82%  │
+├─────────┼─────────────────┤
+│ cli     │ ████░░░░░░ 47%  │
+├─────────┼─────────────────┤
+│ plugins │ ██████████ 100% │
+╰─────────┴─────────────────╯
+```
+
+### ProgressBar API
+
+```ts
+ProgressBar.generate(value: number, max?: number, options?: ProgressBarOptions): string
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `value` | `number` | — | Current value (numerator) |
+| `max` | `number` | `100` | Maximum value (denominator) |
+| `options.width` | `number` | `10` | Bar width in characters |
+| `options.filled` | `string` | `'█'` | Character for the filled portion |
+| `options.empty` | `string` | `'░'` | Character for the empty portion |
+| `options.showPercent` | `boolean` | `true` | Append the `65%` label |
+| `options.label` | `string` | auto | Override with a custom label, e.g. `'3/5'` |
+
+### Standalone Usage
+
+You can also use `ProgressBar.generate` anywhere — not just in table cells:
+
+```ts
+import { ProgressBar } from 'cmd-table';
+
+console.log(ProgressBar.generate(65));                          // ██████░░░░ 65%
+console.log(ProgressBar.generate(3, 5, { width: 5 }));         // ███░░ 60%
+console.log(ProgressBar.generate(50, 100, { showPercent: false })); // █████░░░░░
+console.log(ProgressBar.generate(3, 5, { label: '3 / 5 done' }));  // ███░░ 3 / 5 done
 ```
 
 ## Tree View

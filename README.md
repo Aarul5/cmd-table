@@ -20,6 +20,7 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 *   **Interactive TUI**: Built-in interactive mode for exploring large datasets with search, filtering, and row selection.
 *   **Data Visualization**:
     *   **Sparklines & Heatmaps**: Visualize trends and data density directly in cells.
+    *   **Progress Bars**: Render inline `████░░░░ 65%` progress indicators in any cell.
     *   **Tree View**: Visualize hierarchical data with automatic indentation.
     *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
     *   **Header Groups**: Spans multiple columns under a super-header.
@@ -32,6 +33,7 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
     *   **JSX Support**: Define tables declaratively.
 *   **Streaming**: Efficiently render large datasets row-by-row.
 *   **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
+*   **Per-Column Formatters**: Transform cell values for display via `formatter: (v, rowIndex) => string` — currency, dates, icons, and more.
 *   **CLI Tool**: Standalone executable to pipe JSON / CSV data into formatted tables.
 
 ## Why cmd-table?
@@ -434,6 +436,64 @@ table.addRow({
 });
 ```
 
+### Progress Bars
+Render inline Unicode block-character progress bars inside any cell, typically via a column formatter.
+
+```typescript
+import { Table, ProgressBar } from 'cmd-table';
+
+const t = new Table();
+t.addColumn({ name: 'Module', key: 'module' });
+t.addColumn({
+    name: 'Coverage',
+    key: 'coverage',
+    minWidth: 15,
+    align: 'right',
+    formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
+});
+t.addRow({ module: 'core', coverage: 82 });
+t.addRow({ module: 'cli',  coverage: 47 });
+console.log(t.render());
+// │ core │ ████████░░ 82% │
+// │ cli  │ ████░░░░░░ 47% │
+```
+
+**`ProgressBar.generate(value, max?, options?)` options:**
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `width` | `10` | Bar character width |
+| `filled` | `'█'` | Filled character |
+| `empty` | `'░'` | Empty character |
+| `showPercent` | `true` | Append `65%` label |
+| `label` | auto | Override with custom text, e.g. `'3/5'` |
+
+### Per-Column Formatter Callbacks
+Transform cell values for display using a `formatter` function.
+
+```typescript
+import { Table } from 'cmd-table';
+
+const t = new Table();
+t.addColumn({
+    name: 'Price', key: 'price',
+    minWidth: 10,
+    align: 'right',
+    formatter: (v) => '$' + Number(v).toFixed(2),
+});
+t.addColumn({
+    name: 'Status', key: 'status',
+    formatter: (v) => v === 'ok' ? '✅ OK' : '❌ Fail',
+});
+t.addRow({ price: 9.5, status: 'ok' });
+t.addRow({ price: 99,  status: 'fail' });
+console.log(t.render());
+```
+
+- `formatter` receives the **raw cell value** as a string and the **zero-based row index**.
+- The header row is **never** passed through the formatter.
+- Works with `color`, `align`, `wrapWord`, and `maxWidth`.
+
 ### Advanced Borders
 New themes are available:
 ```typescript
@@ -526,15 +586,15 @@ console.log(table.render());
 | CLI tool with `--interactive` flag | v1.1.0 | Done |
 | SQL / SQLite integration | v1.2.0 | Done |
 | CSV parser (`CsvTable.from()`) | v1.2.0 | Done |
-| 162 tests, 16 modules at 100% coverage | v1.2.0 | Done |
+| 183 tests, 16 modules at 100% coverage | v1.2.0–v1.3.0 | Done |
 | VitePress documentation site | v1.2.2 | Done |
+| Per-column formatter callbacks | v1.3.0 | Done |
+| Progress bars in cells (`ProgressBar`) | v1.3.0 | Done |
 
 ### Planned
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Progress bars in cells | High | Planned |
-| Per-column formatter callbacks | High | Planned |
 | Conditional row coloring / zebra striping | High | Planned |
 | Border control hooks (`drawHorizontalLine`) | High | Planned |
 | Dual ESM/CJS exports | High | Planned |
