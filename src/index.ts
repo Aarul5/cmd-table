@@ -5,6 +5,7 @@ export * from './Cell';
 export * from './LayoutManager';
 export * from './visuals/Sparkline';
 export * from './visuals/Heatmap';
+export * from './visuals/ProgressBar';
 export * from './integrations/html';
 export * from './integrations/csv';
 export * from './integrations/json';

@@ -16,6 +16,20 @@ export interface IColumnOptions {
     priority?: number; // lower value = more important during responsive trimming
     hidden?: boolean;
     color?: string; // Color name (e.g. 'red', 'bold')
+    /**
+     * Optional display formatter. Called with the raw cell value and the
+     * zero-based row index. The returned string is what gets rendered in
+     * the cell. The header row is never passed through the formatter.
+     *
+     * @example
+     * // Format numbers as currency
+     * formatter: (v) => '$' + Number(v).toFixed(2)
+     *
+     * @example
+     * // Colour-code based on row position
+     * formatter: (v, rowIndex) => rowIndex % 2 === 0 ? `[${v}]` : v
+     */
+    formatter?: (value: any, rowIndex: number) => string;
 }
 
 export class Column {
@@ -33,6 +47,7 @@ export class Column {
     public priority: number = 100;
     public hidden: boolean = false;
     public color?: string;
+    public formatter?: (value: any, rowIndex: number) => string;
 
     constructor(options: IColumnOptions = {}) {
         this.name = options.name || '';
@@ -49,6 +64,7 @@ export class Column {
         if (options.priority !== undefined) this.priority = options.priority;
         if (options.hidden !== undefined) this.hidden = options.hidden;
         if (options.color !== undefined) this.color = options.color;
+        if (options.formatter !== undefined) this.formatter = options.formatter;
     }
 }
 
