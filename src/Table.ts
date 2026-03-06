@@ -23,6 +23,16 @@ export interface ITableOptions {
     zebra?: boolean;
     headerGroups?: Array<{ title: string; colSpan: number }>;
     headerColor?: string;
+    /**
+     * Optional callback to apply a per-row ANSI color override.
+     * Called with the row's data object and the zero-based row index.
+     * Return a color name (e.g. `'red'`, `'green'`, `'yellow'`) or
+     * `undefined` to leave the row unstyled.
+     *
+     * @example
+     * rowColor: (row, i) => Number(row.score) < 50 ? 'red' : 'green'
+     */
+    rowColor?: (rowData: Record<string, any>, rowIndex: number) => string | undefined;
 }
 
 export class Table {
@@ -36,6 +46,7 @@ export class Table {
     public headerGroups: Array<{ title: string; colSpan: number }> = [];
     public footer?: Record<string, any> | any[];
     public headerColor?: string;
+    public rowColor?: (rowData: Record<string, any>, rowIndex: number) => string | undefined;
 
     constructor(options: ITableOptions = {}) {
         this.theme = options.theme || THEME_Rounded;
@@ -45,6 +56,7 @@ export class Table {
         this.zebra = Boolean(options.zebra);
         this.headerGroups = options.headerGroups || [];
         this.headerColor = options.headerColor || 'magenta'; // Default magenta header
+        this.rowColor = options.rowColor;
         if (options.columns) {
             options.columns.forEach((col) => this.addColumn(col));
         }
@@ -254,5 +266,49 @@ export class Table {
                 }
             }
         });
+    }
+
+    /**
+     * Transpose the table — flip rows ↔ columns.
+     *
+     * Each original column becomes a data row (first cell = column name).
+     * Each original row becomes a new column (header = "Row 1", "Row 2", …).
+     * Returns a **new** Table; the original is not mutated.
+     *
+     * @example
+     * const t = new Table();
+     * t.addColumn('Name'); t.addColumn('Age');
+     * t.addRow({ Name: 'Alice', Age: 30 });
+     * t.addRow({ Name: 'Bob',   Age: 25 });
+     *
+     * console.log(t.transpose().render());
+     * // ╭───────┬───────┬─────╮
+     * // │ Field │ Row 1 │ Row 2 │
+     * // ├───────┼───────┼─────┤
+     * // │ Name  │ Alice │ Bob │
+     * // │ Age   │ 30    │ 25  │
+     * // ╰───────┴───────┴─────╯
+     */
+    public transpose(): Table {
+        const newColumns: IColumnOptions[] = [
+            { name: 'Field', key: 'field' },
+            ...this.rows.map((_, i) => ({ name: `Row ${i + 1}`, key: `_row_${i}` }))
+        ];
+
+        const transposed = new Table({
+            theme: this.theme,
+            compact: this.compact,
+            columns: newColumns
+        });
+
+        this.columns.forEach((col, colIndex) => {
+            const rowData: Record<string, any> = { field: col.name };
+            this.rows.forEach((row, rowIndex) => {
+                rowData[`_row_${rowIndex}`] = row.cells[colIndex]?.content ?? '';
+            });
+            transposed.addRow(rowData);
+        });
+
+        return transposed;
     }
 }

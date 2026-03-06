@@ -43,7 +43,20 @@ export class StringRenderer implements IRenderer {
         }
 
         grid.forEach((row, rowIndex) => {
-            parts.push(...this.drawGridRowLines(row, colWidths, visibleColumns, theme, rowIndex, workingTable.zebra));
+            // Resolve per-row color from the rowColor callback if defined
+            let rowColorOverride: ColorName | undefined;
+            if (workingTable.rowColor) {
+                const rawRow = workingTable.rows[rowIndex];
+                if (rawRow) {
+                    const rowObj: Record<string, any> = {};
+                    workingTable.columns.forEach((col, ci) => {
+                        rowObj[col.key || col.name] = rawRow.cells[ci]?.content ?? '';
+                    });
+                    const result = workingTable.rowColor(rowObj, rowIndex);
+                    if (result) rowColorOverride = result as ColorName;
+                }
+            }
+            parts.push(...this.drawGridRowLines(row, colWidths, visibleColumns, theme, rowIndex, workingTable.zebra, rowColorOverride));
             if (!workingTable.compact && rowIndex < grid.length - 1 && theme.joinBody) {
                 parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
             }
