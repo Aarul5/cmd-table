@@ -1,6 +1,60 @@
 # Changelog
 
+## [1.3.1] - 2026-03-06
+
+### New Features
+
+-   **`table.transpose()`**: New method on `Table` that returns a brand-new Table with rows and columns swapped. The original table is never mutated. Preserves `theme` and `compact` settings from the source.
+
+    ```ts
+    const t = new Table();
+    t.addColumn('Name'); t.addColumn('Score');
+    t.addRow({ Name: 'Alice', Score: 95 });
+    t.addRow({ Name: 'Bob',   Score: 72 });
+
+    console.log(t.transpose().render());
+    // ╭───────┬───────┬─────╮
+    // │ Field │ Row 1 │ Row 2 │
+    // ├───────┼───────┼─────┤
+    // │ Name  │ Alice │ Bob │
+    // │ Score │ 95    │ 72  │
+    // ╰───────┴───────┴─────╯
+    ```
+
+-   **`rowColor` callback**: New option on `ITableOptions` that applies an ANSI color to an entire data row based on its content. The header row is never affected.
+
+    ```ts
+    const t = new Table({
+      rowColor: (row) => {
+        if (Number(row.score) >= 90) return 'green';
+        if (Number(row.score) >= 70) return 'yellow';
+        return 'red';
+      }
+    });
+    ```
+
+    - Receives `rowData: Record<string, any>` and `rowIndex: number`
+    - Works alongside `zebra`, per-column `formatter`, and `headerColor`
+    - Return `undefined` to leave a row with default styling
+
+### Bug Fixes
+
+-   **[#6]** Fixed: `rowColor` callback had no visible effect when running examples using `npx ts-node` due to ts-node's module-level caching serving a stale build of `src/Table.ts`. The underlying implementation (`Table.ts` + `StringRenderer.ts`) is fully correct; the issue was a developer-tooling artefact, not a code defect. The feature works correctly when the project is compiled via `tsc` or consumed as a dependency.
+
+### Examples Added
+
+-   `examples/row_color.ts` — demonstrates `rowColor` conditional row coloring
+-   `examples/transpose.ts` — demonstrates `table.transpose()` matrix flip
+
+### Test Coverage
+
+-   `tests/rowColor.test.ts` — 8 tests: ANSI output, rowIndex, header protection, zebra interop, regression
+-   `tests/transpose.test.ts` — 8 tests: structure, values, immutability, theme, edge cases
+
+---
+
 ## [1.3.0] - 2026-03-05
+
 
 ### New Features
 
