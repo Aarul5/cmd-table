@@ -5,6 +5,11 @@ coverage/
 npm-debug.log
 yarn-debug.log*
 yarn-error.log*
+# Compiled JS artefacts that can end up in src/ if tsc is run without --outDir
+src/**/*.js
+examples/**/*.js
+temp.txt
+
 
 # Mac
 .DS_Store

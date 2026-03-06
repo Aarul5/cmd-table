@@ -51,7 +51,12 @@
 -   `tests/rowColor.test.ts` — 8 tests: ANSI output, rowIndex, header protection, zebra interop, regression
 -   `tests/transpose.test.ts` — 8 tests: structure, values, immutability, theme, edge cases
 
+### Chores
+
+-   **`.gitignore` updated**: Added `src/**/*.js` and `examples/**/*.js` to prevent accidentally-compiled JavaScript artefacts from being tracked when running `tsc` without an explicit `--outDir`. Also added `temp.txt` to ignore.
+
 ---
+
 
 ## [1.3.0] - 2026-03-05
 
