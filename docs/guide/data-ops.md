@@ -231,3 +231,36 @@ console.log(transposed.render());
 - The `Field` column represents the original column headers.
 - Data columns are dynamically named `Row 1`, `Row 2`, etc.
 - Preserves the `theme` and `compact` options of the original table.
+
+## Diff Tables
+
+Compare two datasets side-by-side using `Table.compare()`. It highlights differences with ANSI colors:
+- **Green rows:** Added in the new dataset
+- **Red rows:** Removed from the old dataset
+- **Yellow cells:** Modified values
+
+```ts
+import { Table } from 'cmd-table';
+
+const oldData = [
+  { id: 1, name: 'Alice', role: 'Engineer' },
+  { id: 2, name: 'Bob', role: 'Designer'   }
+];
+
+const newData = [
+  { id: 1, name: 'Alice', role: 'Lead Engineer' }, // Role changed
+  { id: 3, name: 'Charlie', role: 'Manager'     }  // Added (Bob removed)
+];
+
+// Compare using a primary key
+const diffTable = Table.compare(oldData, newData, {
+  primaryKey: 'id',
+  showUnchanged: false
+});
+
+console.log(diffTable.render());
+```
+
+**Options:**
+- `primaryKey?: string`: If provided, matches objects by this key regardless of order. Otherwise, matches sequentially by array index.
+- `showUnchanged?: boolean`: Default is `true`. Set to `false` to only display rows with additions, deletions, or modifications.

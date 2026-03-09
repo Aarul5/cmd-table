@@ -47,7 +47,7 @@ var HtmlTable = /** @class */ (function () {
         // Initialize Table
         var table = new Table_1.Table({
             columns: headers.map(function (h) { return ({ name: h }); }),
-            compact: options.compact
+            compact: options.compact,
         });
         // Extract Rows
         // Find <tbody> content or just use table content
@@ -59,7 +59,10 @@ var HtmlTable = /** @class */ (function () {
             var rowContent = tr[1];
             // Skip if this row (tr) looks like it was the header we parsed
             // Only relevant if we are parsing the whole content (no tbody found)
-            if (bodyContent === content && headerMatch && headerMatch.index !== undefined && tr.index < headerMatch.index + headerMatch[0].length)
+            if (bodyContent === content &&
+                headerMatch &&
+                headerMatch.index !== undefined &&
+                tr.index < headerMatch.index + headerMatch[0].length)
                 continue;
             var cells = {};
             var tdRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
@@ -83,7 +86,7 @@ var HtmlTable = /** @class */ (function () {
      * Helper to remove HTML tags
      */
     HtmlTable.stripTags = function (html) {
-        return html.replace(/<\/?[^>]+(>|$)/g, "").trim();
+        return html.replace(/<\/?[^>]+(>|$)/g, '').trim();
     };
     /**
      * Convert a Table to an HTML string

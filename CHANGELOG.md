@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.4.0] - 2026-03-09
+
+### New Features
+
+-   **`Table.compare()`**: New static method that generates a diff table comparing two datasets side-by-side. Highlights added rows (green), removed rows (red), and modified cells (yellow showing `old → new`). Includes `primaryKey` matching and an option to hide unchanged rows.
+
 ## [1.3.3] - 2026-03-09
 
 ### Architectural Changes

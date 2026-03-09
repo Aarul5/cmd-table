@@ -9,7 +9,7 @@ var LayoutManager = /** @class */ (function () {
         var grid = [];
         var occupied = {};
         var isOccupied = function (x, y) { return occupied["".concat(x, ",").concat(y)]; };
-        var markOccupied = function (x, y) { return occupied["".concat(x, ",").concat(y)] = true; };
+        var markOccupied = function (x, y) { return (occupied["".concat(x, ",").concat(y)] = true); };
         var maxColumns = table.columns.length || 0;
         table.rows.forEach(function (row, rowIndex) {
             if (!grid[rowIndex])
@@ -39,7 +39,7 @@ var LayoutManager = /** @class */ (function () {
                     x: colIndex,
                     y: rowIndex,
                     realColSpan: cell.colSpan,
-                    realRowSpan: cell.rowSpan
+                    realRowSpan: cell.rowSpan,
                 };
                 grid[rowIndex][colIndex] = gridCell;
                 // Mark spanned area as occupied
@@ -56,7 +56,7 @@ var LayoutManager = /** @class */ (function () {
                             y: rowIndex + r,
                             realColSpan: gridCell.realColSpan,
                             realRowSpan: gridCell.realRowSpan,
-                            hidden: true
+                            hidden: true,
                         };
                     }
                 }
@@ -78,7 +78,7 @@ var LayoutManager = /** @class */ (function () {
                         y: r,
                         realColSpan: 1,
                         realRowSpan: 1,
-                        hidden: true
+                        hidden: true,
                     };
                     continue;
                 }
@@ -87,7 +87,7 @@ var LayoutManager = /** @class */ (function () {
                     x: c,
                     y: r,
                     realColSpan: 1,
-                    realRowSpan: 1
+                    realRowSpan: 1,
                 };
             }
         }

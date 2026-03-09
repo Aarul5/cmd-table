@@ -12,6 +12,7 @@ var Cell = /** @class */ (function () {
             this.rowSpan = content.rowSpan || 1;
             this.align = content.align;
             this.vAlign = content.vAlign;
+            this.color = content.color;
         }
         else {
             this.content = content;
