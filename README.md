@@ -622,12 +622,12 @@ console.log(table.render());
 | Conditional row coloring / zebra striping | v1.3.1 | Done |
 | Transposed table (`table.transpose()`) | v1.3.1 | Done |
 | Border control hooks (`drawHorizontalLine`) | v1.3.2 | Done |
+| Dual ESM/CJS exports | v1.3.3 | Done |
 
 ### Planned
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Dual ESM/CJS exports | High | Planned |
 | Diff table (side-by-side comparison) | Medium | Planned |
 | Emoji/icon width support | Medium | Planned |
 | Browser console rendering | Medium | Planned |

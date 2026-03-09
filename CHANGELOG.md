@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.3] - 2026-03-09
+
+### Architectural Changes
+
+-   **Dual ESM / CommonJS exports:** The library now natively supports both modern ECMAScript Modules (`import`) and legacy CommonJS (`require`). Bundlers and Node.js will automatically pick the correct format via the new `exports` field in `package.json`.
+
 ## [1.3.2] - 2026-03-09
 
 ### New Features
