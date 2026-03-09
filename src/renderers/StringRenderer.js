@@ -39,41 +39,86 @@ var StringRenderer = /** @class */ (function () {
         var grid = LayoutManager_1.LayoutManager.layout(workingTable);
         var colWidths = this.calculateColumnWidths(workingTable, grid);
         var parts = [];
-        if (theme.topBody) {
-            parts.push(this.drawBorder(colWidths, visibleColumns, theme.topLeft, theme.topBody, theme.topJoin, theme.topRight));
-        }
+        var rowsToRender = [];
         if (workingTable.headerGroups.length) {
-            var groups = this.createGroupHeaderCells(workingTable.headerGroups);
-            parts.push.apply(parts, this.drawGridRowLines(groups, colWidths, visibleColumns, theme, 0, false));
-            if (!workingTable.compact && theme.joinBody) {
-                parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
-            }
+            rowsToRender.push({
+                cells: this.createGroupHeaderCells(workingTable.headerGroups),
+                zebra: false,
+                rowIndex: 0,
+                defaultBorderAfter: !workingTable.compact && !!theme.joinBody
+            });
         }
         var headerCells = workingTable.columns
             .filter(function (c) { return !c.hidden; })
             .map(function (column, index) { return ({ cell: new Cell_1.Cell(column.name), x: index, y: -1, realColSpan: 1, realRowSpan: 1 }); });
-        // Apply header color
-        var headerColor = workingTable.headerColor;
-        parts.push.apply(parts, this.drawGridRowLines(headerCells, colWidths, visibleColumns, theme, 0, false, headerColor));
-        if (workingTable.rows.length > 0 && theme.joinBody) {
-            parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
-        }
+        rowsToRender.push({
+            cells: headerCells,
+            zebra: false,
+            rowIndex: 0,
+            colorOverride: workingTable.headerColor,
+            defaultBorderAfter: workingTable.rows.length > 0 ? !!theme.joinBody : !!workingTable.footer && !!theme.joinBody
+        });
         grid.forEach(function (row, rowIndex) {
-            parts.push.apply(parts, _this.drawGridRowLines(row, colWidths, visibleColumns, theme, rowIndex, workingTable.zebra));
-            if (!workingTable.compact && rowIndex < grid.length - 1 && theme.joinBody) {
-                parts.push(_this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
+            var rowColorOverride;
+            if (workingTable.rowColor) {
+                var rawRow_1 = workingTable.rows[rowIndex];
+                if (rawRow_1) {
+                    var rowObj_1 = {};
+                    workingTable.columns.forEach(function (col, ci) {
+                        var _a, _b;
+                        rowObj_1[col.key || col.name] = (_b = (_a = rawRow_1.cells[ci]) === null || _a === void 0 ? void 0 : _a.content) !== null && _b !== void 0 ? _b : '';
+                    });
+                    var result = workingTable.rowColor(rowObj_1, rowIndex);
+                    if (result)
+                        rowColorOverride = result;
+                }
             }
+            rowsToRender.push({
+                cells: row,
+                zebra: workingTable.zebra,
+                rowIndex: rowIndex,
+                colorOverride: rowColorOverride,
+                defaultBorderAfter: rowIndex < grid.length - 1
+                    ? (!workingTable.compact && !!theme.joinBody)
+                    : (!!workingTable.footer && !!theme.joinBody)
+            });
         });
         if (workingTable.footer) {
-            var footerRow = this.createFooterRow(workingTable);
-            if (theme.joinBody) {
-                parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
+            rowsToRender.push({
+                cells: this.createFooterRow(workingTable),
+                zebra: false,
+                rowIndex: 0,
+                defaultBorderAfter: false
+            });
+        }
+        var size = rowsToRender.length;
+        var checkBorder = function (index, defaultDraw) {
+            if (workingTable.drawHorizontalLine) {
+                return workingTable.drawHorizontalLine(index, size);
             }
-            parts.push.apply(parts, this.drawGridRowLines(footerRow, colWidths, visibleColumns, theme, 0, false));
-        }
-        if (theme.bottomBody) {
-            parts.push(this.drawBorder(colWidths, visibleColumns, theme.bottomLeft, theme.bottomBody, theme.bottomJoin, theme.bottomRight));
-        }
+            return defaultDraw;
+        };
+        var pushBorder = function (draw, left, body, join, right) {
+            left = left || theme.joinLeft;
+            body = body || theme.joinBody;
+            join = join || theme.joinJoin;
+            right = right || theme.joinRight;
+            if (draw && body) {
+                parts.push(_this.drawBorder(colWidths, visibleColumns, left, body, join, right));
+            }
+        };
+        // 0. Top border
+        pushBorder(checkBorder(0, !!theme.topBody), theme.topLeft, theme.topBody, theme.topJoin, theme.topRight);
+        // Render each row + subsequent border
+        rowsToRender.forEach(function (renderRow, index) {
+            parts.push.apply(parts, _this.drawGridRowLines(renderRow.cells, colWidths, visibleColumns, theme, renderRow.rowIndex, renderRow.zebra, renderRow.colorOverride));
+            // Middle borders
+            if (index < size - 1) {
+                pushBorder(checkBorder(index + 1, renderRow.defaultBorderAfter), theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight);
+            }
+        });
+        // N. Bottom border
+        pushBorder(checkBorder(size, !!theme.bottomBody), theme.bottomLeft, theme.bottomBody, theme.bottomJoin, theme.bottomRight);
         return parts.join('\n');
     };
     StringRenderer.prototype.getResponsiveTable = function (table) {
@@ -328,7 +373,13 @@ var StringRenderer = /** @class */ (function () {
             var metrics = this.getSpanMetrics(columns, widths, col, gridCell.realColSpan, joinWidth);
             var wrapWord = (_a = column === null || column === void 0 ? void 0 : column.wrapWord) !== null && _a !== void 0 ? _a : true;
             var truncate = (_b = column === null || column === void 0 ? void 0 : column.truncate) !== null && _b !== void 0 ? _b : '...';
-            var lines_1 = this.wrapCell(gridCell.cell.getString(), metrics.contentWidth, wrapWord, truncate);
+            // Apply per-column formatter if defined.
+            // gridCell.y >= 0 ensures the header row (y = -1) is never formatted.
+            var rawContent = gridCell.cell.getString();
+            if ((column === null || column === void 0 ? void 0 : column.formatter) && gridCell.y >= 0) {
+                rawContent = String(column.formatter(rawContent, gridCell.y));
+            }
+            var lines_1 = this.wrapCell(rawContent, metrics.contentWidth, wrapWord, truncate);
             cellLines.push({
                 x: col,
                 span: gridCell.realColSpan,

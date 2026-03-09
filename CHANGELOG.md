@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.2] - 2026-03-09
+
+### New Features
+
+-   **`drawHorizontalLine` hook**: New callback option on `ITableOptions` that gives developers ultimate, fine-grained control over which horizontal dividers are drawn. The callback receives `(index, size)` where 0 is the top border and `size` is the bottom border. This behavior overrides `compact: true` and the table's default body joins.
+
+    ```ts
+    const t = new Table({
+        drawHorizontalLine: (index, size) => index === 0 || index === size // only draw top and bottom borders
+    });
+    ```
+
 ## [1.3.1] - 2026-03-06
 
 ### New Features

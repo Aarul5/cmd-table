@@ -46,6 +46,8 @@ var Table = /** @class */ (function () {
         this.zebra = Boolean(options.zebra);
         this.headerGroups = options.headerGroups || [];
         this.headerColor = options.headerColor || 'magenta'; // Default magenta header
+        this.rowColor = options.rowColor;
+        this.drawHorizontalLine = options.drawHorizontalLine;
         if (options.columns) {
             options.columns.forEach(function (col) { return _this.addColumn(col); });
         }
@@ -237,6 +239,47 @@ var Table = /** @class */ (function () {
                 }
             }
         });
+    };
+    /**
+     * Transpose the table — flip rows ↔ columns.
+     *
+     * Each original column becomes a data row (first cell = column name).
+     * Each original row becomes a new column (header = "Row 1", "Row 2", …).
+     * Returns a **new** Table; the original is not mutated.
+     *
+     * @example
+     * const t = new Table();
+     * t.addColumn('Name'); t.addColumn('Age');
+     * t.addRow({ Name: 'Alice', Age: 30 });
+     * t.addRow({ Name: 'Bob',   Age: 25 });
+     *
+     * console.log(t.transpose().render());
+     * // ╭───────┬───────┬─────╮
+     * // │ Field │ Row 1 │ Row 2 │
+     * // ├───────┼───────┼─────┤
+     * // │ Name  │ Alice │ Bob │
+     * // │ Age   │ 30    │ 25  │
+     * // ╰───────┴───────┴─────╯
+     */
+    Table.prototype.transpose = function () {
+        var _this = this;
+        var newColumns = __spreadArray([
+            { name: 'Field', key: 'field' }
+        ], this.rows.map(function (_, i) { return ({ name: "Row ".concat(i + 1), key: "_row_".concat(i) }); }), true);
+        var transposed = new Table({
+            theme: this.theme,
+            compact: this.compact,
+            columns: newColumns
+        });
+        this.columns.forEach(function (col, colIndex) {
+            var rowData = { field: col.name };
+            _this.rows.forEach(function (row, rowIndex) {
+                var _a, _b;
+                rowData["_row_".concat(rowIndex)] = (_b = (_a = row.cells[colIndex]) === null || _a === void 0 ? void 0 : _a.content) !== null && _b !== void 0 ? _b : '';
+            });
+            transposed.addRow(rowData);
+        });
+        return transposed;
     };
     return Table;
 }());

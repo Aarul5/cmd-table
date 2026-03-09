@@ -38,6 +38,8 @@ var Column = /** @class */ (function () {
             this.hidden = options.hidden;
         if (options.color !== undefined)
             this.color = options.color;
+        if (options.formatter !== undefined)
+            this.formatter = options.formatter;
     }
     return Column;
 }());

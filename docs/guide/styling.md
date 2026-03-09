@@ -170,6 +170,27 @@ const table = new Table({ compact: true });
 │ Bob   │ PM   │
 ```
 
+## Manual Border Control (`drawHorizontalLine`)
+
+For ultimate control over which horizontal lines are drawn, use the `drawHorizontalLine` callback. This completely overrides `compact: true` and the `theme`'s default body joins.
+
+The callback receives:
+- `index`: the horizontal line number (0 = top-most border)
+- `size`: the total number of data rows + headers/footers
+
+```ts
+const table = new Table({
+    drawHorizontalLine: (index, size) => {
+        // 0 = top border
+        // 1 = line after header
+        // size = bottom border
+        return index === 0 || index === 1 || index === size;
+    }
+});
+```
+
+This will produce a table with no horizontal dividers between the data rows themselves.
+
 ## Combining Options
 
 Mix and match for the exact look you want:

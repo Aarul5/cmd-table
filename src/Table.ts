@@ -29,10 +29,22 @@ export interface ITableOptions {
      * Return a color name (e.g. `'red'`, `'green'`, `'yellow'`) or
      * `undefined` to leave the row unstyled.
      *
+     *
      * @example
      * rowColor: (row, i) => Number(row.score) < 50 ? 'red' : 'green'
      */
     rowColor?: (rowData: Record<string, any>, rowIndex: number) => string | undefined;
+
+    /**
+     * Optional callback to control exactly which horizontal borders are drawn.
+     * Evaluated for every possible horizontal line (0 = top border, size = bottom border).
+     * Overrides default theme/compact behavior.
+     *
+     * @example
+     * // Draw only top and bottom borders
+     * drawHorizontalLine: (index, size) => index === 0 || index === size
+     */
+    drawHorizontalLine?: (index: number, size: number) => boolean;
 }
 
 export class Table {
@@ -47,6 +59,7 @@ export class Table {
     public footer?: Record<string, any> | any[];
     public headerColor?: string;
     public rowColor?: (rowData: Record<string, any>, rowIndex: number) => string | undefined;
+    public drawHorizontalLine?: (index: number, size: number) => boolean;
 
     constructor(options: ITableOptions = {}) {
         this.theme = options.theme || THEME_Rounded;
@@ -57,6 +70,7 @@ export class Table {
         this.headerGroups = options.headerGroups || [];
         this.headerColor = options.headerColor || 'magenta'; // Default magenta header
         this.rowColor = options.rowColor;
+        this.drawHorizontalLine = options.drawHorizontalLine;
         if (options.columns) {
             options.columns.forEach((col) => this.addColumn(col));
         }
