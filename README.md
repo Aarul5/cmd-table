@@ -607,16 +607,16 @@ console.log(table.render());
 | VitePress documentation site | v1.2.2 | Done |
 | Per-column formatter callbacks | v1.3.0 | Done |
 | Progress bars in cells (`ProgressBar`) | v1.3.0 | Done |
+| Conditional row coloring / zebra striping | v1.3.1 | Done |
+| Transposed table (`table.transpose()`) | v1.3.1 | Done |
 
 ### Planned
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Conditional row coloring / zebra striping | High | Done |
 | Border control hooks (`drawHorizontalLine`) | High | Planned |
 | Dual ESM/CJS exports | High | Planned |
 | Diff table (side-by-side comparison) | Medium | Planned |
-| Transposed table (`table.transpose()`) | Medium | Planned |
 | Emoji/icon width support | Medium | Planned |
 | Browser console rendering | Medium | Planned |
 | Gantt-chart rows | Medium | Planned |
