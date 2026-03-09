@@ -25,7 +25,7 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
     *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
     *   **Header Groups**: Spans multiple columns under a super-header.
     *   **Footers & Summaries**: Automatic sum/avg/count or custom footers.
-*   **Data Operations**: Built-in column sorting (`asc`/`desc`) and aggregation (pivot tables).
+*   **Data Operations**: Built-in column sorting (`asc`/`desc`), aggregation (pivot tables), and **matrix transposing (`transpose()`)**.
 *   **Integrations**:
     *   **SQL / SQLite**: Browse database tables with `SqlDataSource` adapter.
     *   **CSV Parser**: Parse CSV strings into tables with `CsvTable.from()`.
@@ -494,6 +494,23 @@ console.log(t.render());
 - The header row is **never** passed through the formatter.
 - Works with `color`, `align`, `wrapWord`, and `maxWidth`.
 
+### Conditional Row Styling
+Apply an ANSI color to an entire row dynamically based on the data object.
+
+```typescript
+const table = new Table({
+    rowColor: (row, index) => {
+        if (Number(row.score) >= 90) return 'green';
+        if (Number(row.score) >= 70) return 'yellow';
+        return 'red';
+    }
+});
+```
+
+- Header row is unaffected.
+- Compatible with per-column formatters and `zebra` striping.
+- Return `undefined` to leave the row unstyled.
+
 ### Advanced Borders
 New themes are available:
 ```typescript
@@ -595,7 +612,7 @@ console.log(table.render());
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Conditional row coloring / zebra striping | High | Planned |
+| Conditional row coloring / zebra striping | High | Done |
 | Border control hooks (`drawHorizontalLine`) | High | Planned |
 | Dual ESM/CJS exports | High | Planned |
 | Diff table (side-by-side comparison) | Medium | Planned |

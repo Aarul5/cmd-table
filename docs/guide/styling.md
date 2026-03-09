@@ -105,6 +105,32 @@ table.addRow({
 });
 ```
 
+## Conditional Row Coloring
+
+You can apply an ANSI color to an entire row dynamically based on the row's data using the `rowColor` callback option.
+
+```ts
+const table = new Table({
+    rowColor: (row, index) => {
+        if (Number(row.Amount) >= 500) return 'green';
+        if (Number(row.Amount) >= 100) return 'yellow';
+        return 'red';
+    }
+});
+table.addColumn('Name');
+table.addColumn('Amount');
+
+table.addRows([
+    { Name: 'Alice', Amount: 600 },  // Entire row is green
+    { Name: 'Bob', Amount: 150 },    // Entire row is yellow
+    { Name: 'Charlie', Amount: 50 }  // Entire row is red
+]);
+```
+
+- The `rowColor` callback receives the row data (`Record<string, any>`) and the zero-based `index`.
+- The header row is **never** colored by `rowColor`.
+- Returning `undefined` leaves the row unstyled (or uses `zebra` styling if enabled).
+
 ## Zebra Striping
 
 Dim alternating rows for better readability in large tables:

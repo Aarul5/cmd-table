@@ -196,3 +196,38 @@ console.log(matrix.render());
 │ Gadget │ 200 │ 250 │
 ╰────────┴─────┴─────╯
 ```
+
+## Transpose (Matrix Flip)
+
+Swap the rows and columns of an existing table using the `transpose()` method. This is highly useful when you have a vast number of columns but few rows, and you want to display the metrics vertically for better readability.
+
+```ts
+const table = new Table();
+table.addColumn('Metric');
+table.addColumn('ServerA');
+table.addColumn('ServerB');
+
+table.addRow({ Metric: 'CPU', ServerA: '50%', ServerB: '90%' });
+table.addRow({ Metric: 'RAM', ServerA: '16GB', ServerB: '32GB' });
+
+// Returns a brand-new Table instance
+const transposed = table.transpose();
+
+console.log(transposed.render());
+```
+
+**Expected output:**
+```
+╭─────────┬───────┬──────╮
+│ Field   │ Row 1 │ Row 2│
+├─────────┼───────┼──────┤
+│ Metric  │ CPU   │ RAM  │
+│ ServerA │ 50%   │ 16GB │
+│ ServerB │ 90%   │ 32GB │
+╰─────────┴───────┴──────╯
+```
+
+- Returns a **new** `Table` instance; the original table is **not mutated**.
+- The `Field` column represents the original column headers.
+- Data columns are dynamically named `Row 1`, `Row 2`, etc.
+- Preserves the `theme` and `compact` options of the original table.
