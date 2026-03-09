@@ -12,10 +12,15 @@ cmd-table ships with full TypeScript declarations. No `@types` package needed.
 
 ## Your First Table
 
-The fastest way to create a table — just add rows with objects. Columns are auto-detected from the keys.
+The fastest way to create a table — just add rows with objects. Columns are auto-detected from the keys. Both ESM (`import`) and CommonJS (`require`) are natively supported.
 
 ```ts
+// ESM (TypeScript / ES Modules)
 import { Table } from 'cmd-table';
+
+// CommonJS
+// const { Table } = require('cmd-table');
+```
 
 const table = new Table();
 table.addRow({ Name: 'Alice', Role: 'Engineer', Status: 'Active' });
