@@ -45,18 +45,26 @@ var StringRenderer = /** @class */ (function () {
                 cells: this.createGroupHeaderCells(workingTable.headerGroups),
                 zebra: false,
                 rowIndex: 0,
-                defaultBorderAfter: !workingTable.compact && !!theme.joinBody
+                defaultBorderAfter: !workingTable.compact && !!theme.joinBody,
             });
         }
         var headerCells = workingTable.columns
             .filter(function (c) { return !c.hidden; })
-            .map(function (column, index) { return ({ cell: new Cell_1.Cell(column.name), x: index, y: -1, realColSpan: 1, realRowSpan: 1 }); });
+            .map(function (column, index) {
+            return ({
+                cell: new Cell_1.Cell(column.name),
+                x: index,
+                y: -1,
+                realColSpan: 1,
+                realRowSpan: 1,
+            });
+        });
         rowsToRender.push({
             cells: headerCells,
             zebra: false,
             rowIndex: 0,
             colorOverride: workingTable.headerColor,
-            defaultBorderAfter: workingTable.rows.length > 0 ? !!theme.joinBody : !!workingTable.footer && !!theme.joinBody
+            defaultBorderAfter: workingTable.rows.length > 0 ? !!theme.joinBody : !!workingTable.footer && !!theme.joinBody,
         });
         grid.forEach(function (row, rowIndex) {
             var rowColorOverride;
@@ -79,8 +87,8 @@ var StringRenderer = /** @class */ (function () {
                 rowIndex: rowIndex,
                 colorOverride: rowColorOverride,
                 defaultBorderAfter: rowIndex < grid.length - 1
-                    ? (!workingTable.compact && !!theme.joinBody)
-                    : (!!workingTable.footer && !!theme.joinBody)
+                    ? !workingTable.compact && !!theme.joinBody
+                    : !!workingTable.footer && !!theme.joinBody,
             });
         });
         if (workingTable.footer) {
@@ -88,7 +96,7 @@ var StringRenderer = /** @class */ (function () {
                 cells: this.createFooterRow(workingTable),
                 zebra: false,
                 rowIndex: 0,
-                defaultBorderAfter: false
+                defaultBorderAfter: false,
             });
         }
         var size = rowsToRender.length;
@@ -137,7 +145,9 @@ var StringRenderer = /** @class */ (function () {
         var total = this.calculateTableWidth(widths, this.getVisibleColumns(next), next.theme);
         if (total <= terminalWidth)
             return this.buildVisibleTable(next);
-        var sorted = next.columns.map(function (column, index) { return ({ index: index, priority: column.priority }); }).sort(function (a, b) { return b.priority - a.priority; });
+        var sorted = next.columns
+            .map(function (column, index) { return ({ index: index, priority: column.priority }); })
+            .sort(function (a, b) { return b.priority - a.priority; });
         for (var _i = 0, sorted_1 = sorted; _i < sorted_1.length; _i++) {
             var col = sorted_1[_i];
             next.columns[col.index].hidden = true;
@@ -157,7 +167,14 @@ var StringRenderer = /** @class */ (function () {
         return this.buildVisibleTable(next);
     };
     StringRenderer.prototype.toStacked = function (table) {
-        var stacked = new Table_1.Table({ theme: table.theme, compact: table.compact, columns: [{ name: 'Field', key: 'field' }, { name: 'Value', key: 'value' }] });
+        var stacked = new Table_1.Table({
+            theme: table.theme,
+            compact: table.compact,
+            columns: [
+                { name: 'Field', key: 'field' },
+                { name: 'Value', key: 'value' },
+            ],
+        });
         table.rows.forEach(function (row, idx) {
             stacked.addRow([{ content: "Row ".concat(idx + 1), colSpan: 2, align: 'center' }]);
             table.columns.forEach(function (column, colIndex) {
@@ -178,7 +195,7 @@ var StringRenderer = /** @class */ (function () {
                 x: cursor,
                 y: -2,
                 realColSpan: group.colSpan,
-                realRowSpan: 1
+                realRowSpan: 1,
             };
             cursor += group.colSpan;
         });
@@ -187,20 +204,27 @@ var StringRenderer = /** @class */ (function () {
     StringRenderer.prototype.createFooterRow = function (table) {
         var values = Array.isArray(table.footer)
             ? table.footer
-            : table.columns.map(function (column) { var _a, _b; return (table.footer && !Array.isArray(table.footer) ? (_b = (_a = table.footer[column.key]) !== null && _a !== void 0 ? _a : table.footer[column.name]) !== null && _b !== void 0 ? _b : '' : ''); });
+            : table.columns.map(function (column) {
+                var _a, _b;
+                return table.footer && !Array.isArray(table.footer)
+                    ? ((_b = (_a = table.footer[column.key]) !== null && _a !== void 0 ? _a : table.footer[column.name]) !== null && _b !== void 0 ? _b : '')
+                    : '';
+            });
         return values.map(function (value, index) { return ({
             cell: new Cell_1.Cell(value),
             x: index,
             y: table.rows.length,
             realColSpan: 1,
-            realRowSpan: 1
+            realRowSpan: 1,
         }); });
     };
     StringRenderer.prototype.getVisibleColumns = function (table) {
         return table.columns.filter(function (column) { return !column.hidden; });
     };
     StringRenderer.prototype.buildVisibleTable = function (table) {
-        var visible = table.columns.map(function (column, index) { return ({ column: column, index: index }); }).filter(function (item) { return !item.column.hidden; });
+        var visible = table.columns
+            .map(function (column, index) { return ({ column: column, index: index }); })
+            .filter(function (item) { return !item.column.hidden; });
         var next = new Table_1.Table({
             theme: table.theme,
             compact: table.compact,
@@ -208,7 +232,7 @@ var StringRenderer = /** @class */ (function () {
             responsiveMode: 'none',
             zebra: table.zebra,
             headerGroups: table.headerGroups,
-            columns: visible.map(function (item) { return (__assign({}, item.column)); })
+            columns: visible.map(function (item) { return (__assign({}, item.column)); }),
         });
         table.rows.forEach(function (row) {
             var data = visible.map(function (_a) {
@@ -221,7 +245,7 @@ var StringRenderer = /** @class */ (function () {
                     colSpan: cell.colSpan,
                     rowSpan: cell.rowSpan,
                     align: cell.align,
-                    vAlign: cell.vAlign
+                    vAlign: cell.vAlign,
                 };
             });
             next.addRow(data);
@@ -356,7 +380,7 @@ var StringRenderer = /** @class */ (function () {
         return {
             contentWidth: contentWidth + internalPadding + joinWidth * Math.max(0, span - 1),
             padLeft: padLeft,
-            padRight: padRight
+            padRight: padRight,
         };
     };
     StringRenderer.prototype.drawGridRowLines = function (row, widths, columns, theme, rowIndex, zebra, overrideColor) {
@@ -388,7 +412,8 @@ var StringRenderer = /** @class */ (function () {
                 vAlign: gridCell.cell.vAlign || (column === null || column === void 0 ? void 0 : column.vAlign) || 'top',
                 padLeft: metrics.padLeft,
                 padRight: metrics.padRight,
-                contentWidth: metrics.contentWidth
+                contentWidth: metrics.contentWidth,
+                color: gridCell.cell.color,
             });
             i += gridCell.realColSpan - 1;
         }
@@ -408,7 +433,9 @@ var StringRenderer = /** @class */ (function () {
                 }
                 var maxHeight = current.lines.length;
                 var offset = this_1.verticalOffset(current.vAlign, rowHeight, maxHeight);
-                var text = lineIndex < offset || lineIndex >= offset + maxHeight ? '' : current.lines[lineIndex - offset];
+                var text = lineIndex < offset || lineIndex >= offset + maxHeight
+                    ? ''
+                    : current.lines[lineIndex - offset];
                 var aligned = this_1.alignText(text, current.contentWidth, current.align);
                 // Apply Coloring
                 // 1. Override Color (Header)
@@ -417,6 +444,9 @@ var StringRenderer = /** @class */ (function () {
                 var column = columns[colIndex];
                 if (overrideColor) {
                     aligned = (0, colors_1.colorize)(aligned, overrideColor);
+                }
+                else if (current.color) {
+                    aligned = (0, colors_1.colorize)(aligned, current.color);
                 }
                 else if (column === null || column === void 0 ? void 0 : column.color) {
                     aligned = (0, colors_1.colorize)(aligned, column.color);

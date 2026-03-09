@@ -10,6 +10,17 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -96,7 +107,9 @@ var Table = /** @class */ (function () {
             if (op === 'count')
                 footer[name] = values.length;
             else if (op === 'avg')
-                footer[name] = values.length ? Number((values.reduce(function (a, b) { return a + b; }, 0) / values.length).toFixed(2)) : 0;
+                footer[name] = values.length
+                    ? Number((values.reduce(function (a, b) { return a + b; }, 0) / values.length).toFixed(2))
+                    : 0;
             else
                 footer[name] = values.reduce(function (a, b) { return a + b; }, 0);
         });
@@ -113,7 +126,7 @@ var Table = /** @class */ (function () {
             responsiveMode: this.responsiveMode,
             zebra: this.zebra,
             headerGroups: this.headerGroups,
-            columns: this.columns.map(function (column) { return (__assign({}, column)); })
+            columns: this.columns.map(function (column) { return (__assign({}, column)); }),
         });
         next.rows = this.rows.slice(start, end);
         next.footer = this.footer;
@@ -149,7 +162,10 @@ var Table = /** @class */ (function () {
     };
     Table.fromVertical = function (record, options) {
         if (options === void 0) { options = {}; }
-        var table = new Table(__assign(__assign({}, options), { columns: [{ name: 'Key', key: 'key' }, { name: 'Value', key: 'value' }] }));
+        var table = new Table(__assign(__assign({}, options), { columns: [
+                { name: 'Key', key: 'key' },
+                { name: 'Value', key: 'value' },
+            ] }));
         Object.entries(record).forEach(function (_a) {
             var key = _a[0], value = _a[1];
             return table.addRow({ key: key, value: value });
@@ -198,6 +214,103 @@ var Table = /** @class */ (function () {
         });
         return table;
     };
+    /**
+     * Compare two data sets and return a table highlighting the differences.
+     * @param oldData The original dataset
+     * @param newData The new dataset
+     * @param options Configures how the diff is matched and rendered
+     */
+    Table.compare = function (oldData, newData, options) {
+        if (options === void 0) { options = {}; }
+        var primaryKey = options.primaryKey, _a = options.showUnchanged, showUnchanged = _a === void 0 ? true : _a, tableOpts = __rest(options, ["primaryKey", "showUnchanged"]);
+        var diffTable = new Table(tableOpts);
+        // Auto-discover all unique columns across both datasets
+        var allKeys = new Set();
+        __spreadArray(__spreadArray([], oldData, true), newData, true).forEach(function (row) { return Object.keys(row).forEach(function (k) { return allKeys.add(k); }); });
+        if (allKeys.size === 0)
+            return diffTable;
+        allKeys.forEach(function (key) { return diffTable.addColumn(key); });
+        var processedOldIndices = new Set();
+        var processedNewIndices = new Set();
+        var compareAndAdd = function (oldObj, newObj) {
+            var hasChanges = Array.from(allKeys).some(function (k) { return oldObj[k] !== newObj[k]; });
+            if (!hasChanges && !showUnchanged)
+                return;
+            if (!hasChanges) {
+                diffTable.addRow(newObj);
+                return;
+            }
+            // Highlighting changed cells
+            var diffRow = {};
+            allKeys.forEach(function (key) {
+                var _a, _b;
+                var oldVal = (_a = oldObj[key]) !== null && _a !== void 0 ? _a : '';
+                var newVal = (_b = newObj[key]) !== null && _b !== void 0 ? _b : '';
+                if (oldVal !== newVal) {
+                    // Use native Cell coloring to prevent ANSI stripping during padding
+                    diffRow[key] = { content: String("".concat(oldVal, " \u2192 ").concat(newVal)), color: 'yellow' };
+                }
+                else {
+                    diffRow[key] = newVal;
+                }
+            });
+            diffTable.addRow(diffRow);
+        };
+        if (primaryKey) {
+            // Match by Primary Key
+            oldData.forEach(function (oldObj, oldIdx) {
+                var pkValue = oldObj[primaryKey];
+                var newIdx = newData.findIndex(function (n) { return n[primaryKey] === pkValue; });
+                if (newIdx !== -1) {
+                    compareAndAdd(oldObj, newData[newIdx]);
+                    processedOldIndices.add(oldIdx);
+                    processedNewIndices.add(newIdx);
+                }
+                else {
+                    // Deleted
+                    var row_1 = {};
+                    allKeys.forEach(function (k) { var _a; return (row_1[k] = { content: String((_a = oldObj[k]) !== null && _a !== void 0 ? _a : ''), color: 'red' }); });
+                    diffTable.addRow(row_1);
+                    processedOldIndices.add(oldIdx);
+                }
+            });
+            // Added
+            newData.forEach(function (newObj, newIdx) {
+                if (!processedNewIndices.has(newIdx)) {
+                    var row_2 = {};
+                    allKeys.forEach(function (k) { var _a; return (row_2[k] = { content: String((_a = newObj[k]) !== null && _a !== void 0 ? _a : ''), color: 'green' }); });
+                    diffTable.addRow(row_2);
+                }
+            });
+        }
+        else {
+            // Match by Row Index
+            var maxLength = Math.max(oldData.length, newData.length);
+            var _loop_1 = function (i) {
+                var oldObj = oldData[i];
+                var newObj = newData[i];
+                if (oldObj && newObj) {
+                    compareAndAdd(oldObj, newObj);
+                }
+                else if (oldObj && !newObj) {
+                    // Removed
+                    var row_3 = {};
+                    allKeys.forEach(function (k) { var _a; return (row_3[k] = { content: String((_a = oldObj[k]) !== null && _a !== void 0 ? _a : ''), color: 'red' }); });
+                    diffTable.addRow(row_3);
+                }
+                else if (!oldObj && newObj) {
+                    // Added
+                    var row_4 = {};
+                    allKeys.forEach(function (k) { var _a; return (row_4[k] = { content: String((_a = newObj[k]) !== null && _a !== void 0 ? _a : ''), color: 'green' }); });
+                    diffTable.addRow(row_4);
+                }
+            };
+            for (var i = 0; i < maxLength; i++) {
+                _loop_1(i);
+            }
+        }
+        return diffTable;
+    };
     Table.prototype.addTree = function (labelColumn, nodes, indentSize) {
         var _this = this;
         if (indentSize === void 0) { indentSize = 2; }
@@ -221,7 +334,9 @@ var Table = /** @class */ (function () {
     Table.prototype.mergeAdjacent = function (columns) {
         var _this = this;
         var colIndices = columns
-            ? columns.map(function (name) { return _this.columns.findIndex(function (c) { return c.name === name || c.key === name; }); }).filter(function (i) { return i >= 0; })
+            ? columns
+                .map(function (name) { return _this.columns.findIndex(function (c) { return c.name === name || c.key === name; }); })
+                .filter(function (i) { return i >= 0; })
             : this.columns.map(function (_, i) { return i; });
         if (colIndices.length === 0)
             return;
@@ -269,7 +384,7 @@ var Table = /** @class */ (function () {
         var transposed = new Table({
             theme: this.theme,
             compact: this.compact,
-            columns: newColumns
+            columns: newColumns,
         });
         this.columns.forEach(function (col, colIndex) {
             var rowData = { field: col.name };

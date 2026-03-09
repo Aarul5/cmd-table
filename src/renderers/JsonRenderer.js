@@ -5,7 +5,9 @@ var JsonRenderer = /** @class */ (function () {
     function JsonRenderer() {
     }
     JsonRenderer.prototype.render = function (table) {
-        var visibleColumns = table.columns.map(function (column, index) { return ({ column: column, index: index }); }).filter(function (item) { return !item.column.hidden; });
+        var visibleColumns = table.columns
+            .map(function (column, index) { return ({ column: column, index: index }); })
+            .filter(function (item) { return !item.column.hidden; });
         var data = table.rows.map(function (row) {
             var obj = {};
             visibleColumns.forEach(function (_a) {

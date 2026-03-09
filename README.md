@@ -623,12 +623,12 @@ console.log(table.render());
 | Transposed table (`table.transpose()`) | v1.3.1 | Done |
 | Border control hooks (`drawHorizontalLine`) | v1.3.2 | Done |
 | Dual ESM/CJS exports | v1.3.3 | Done |
+| Diff table (side-by-side comparison) | v1.4.0 | Done |
 
 ### Planned
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Diff table (side-by-side comparison) | Medium | Planned |
 | Emoji/icon width support | Medium | Planned |
 | Browser console rendering | Medium | Planned |
 | Gantt-chart rows | Medium | Planned |
