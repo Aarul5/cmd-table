@@ -511,6 +511,18 @@ const table = new Table({
 - Compatible with per-column formatters and `zebra` striping.
 - Return `undefined` to leave the row unstyled.
 
+### Manual Border Control (`drawHorizontalLine`)
+Gain fine-grained control over which horizontal dividers are drawn using the `drawHorizontalLine` hook. Each possible horizontal line is assigned an index from `0` (top) to `size` (bottom).
+
+```typescript
+const table = new Table({
+    drawHorizontalLine: (index, size) => {
+        // Draw only the top, header separator, and bottom border
+        return index === 0 || index === 1 || index === size;
+    }
+});
+```
+
 ### Advanced Borders
 New themes are available:
 ```typescript
@@ -609,12 +621,12 @@ console.log(table.render());
 | Progress bars in cells (`ProgressBar`) | v1.3.0 | Done |
 | Conditional row coloring / zebra striping | v1.3.1 | Done |
 | Transposed table (`table.transpose()`) | v1.3.1 | Done |
+| Border control hooks (`drawHorizontalLine`) | v1.3.2 | Done |
 
 ### Planned
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Border control hooks (`drawHorizontalLine`) | High | Planned |
 | Dual ESM/CJS exports | High | Planned |
 | Diff table (side-by-side comparison) | Medium | Planned |
 | Emoji/icon width support | Medium | Planned |

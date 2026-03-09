@@ -18,32 +18,36 @@ export class StringRenderer implements IRenderer {
         const colWidths = this.calculateColumnWidths(workingTable, grid);
         const parts: string[] = [];
 
-        if (theme.topBody) {
-            parts.push(this.drawBorder(colWidths, visibleColumns, theme.topLeft, theme.topBody, theme.topJoin, theme.topRight));
-        }
+        const rowsToRender: {
+            cells: GridCell[];
+            zebra: boolean;
+            rowIndex: number;
+            colorOverride?: ColorName;
+            defaultBorderAfter: boolean;
+        }[] = [];
 
         if (workingTable.headerGroups.length) {
-            const groups = this.createGroupHeaderCells(workingTable.headerGroups);
-            parts.push(...this.drawGridRowLines(groups, colWidths, visibleColumns, theme, 0, false));
-            if (!workingTable.compact && theme.joinBody) {
-                parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
-            }
+            rowsToRender.push({
+                cells: this.createGroupHeaderCells(workingTable.headerGroups),
+                zebra: false,
+                rowIndex: 0,
+                defaultBorderAfter: !workingTable.compact && !!theme.joinBody
+            });
         }
 
         const headerCells = workingTable.columns
             .filter((c) => !c.hidden)
             .map((column, index) => ({ cell: new Cell(column.name), x: index, y: -1, realColSpan: 1, realRowSpan: 1 } as GridCell));
 
-        // Apply header color
-        const headerColor = workingTable.headerColor as ColorName | undefined;
-        parts.push(...this.drawGridRowLines(headerCells, colWidths, visibleColumns, theme, 0, false, headerColor));
-
-        if (workingTable.rows.length > 0 && theme.joinBody) {
-            parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
-        }
+        rowsToRender.push({
+            cells: headerCells,
+            zebra: false,
+            rowIndex: 0,
+            colorOverride: workingTable.headerColor as ColorName | undefined,
+            defaultBorderAfter: workingTable.rows.length > 0 ? !!theme.joinBody : !!workingTable.footer && !!theme.joinBody
+        });
 
         grid.forEach((row, rowIndex) => {
-            // Resolve per-row color from the rowColor callback if defined
             let rowColorOverride: ColorName | undefined;
             if (workingTable.rowColor) {
                 const rawRow = workingTable.rows[rowIndex];
@@ -56,23 +60,70 @@ export class StringRenderer implements IRenderer {
                     if (result) rowColorOverride = result as ColorName;
                 }
             }
-            parts.push(...this.drawGridRowLines(row, colWidths, visibleColumns, theme, rowIndex, workingTable.zebra, rowColorOverride));
-            if (!workingTable.compact && rowIndex < grid.length - 1 && theme.joinBody) {
-                parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
-            }
+
+            rowsToRender.push({
+                cells: row,
+                zebra: workingTable.zebra,
+                rowIndex: rowIndex,
+                colorOverride: rowColorOverride,
+                defaultBorderAfter: rowIndex < grid.length - 1
+                    ? (!workingTable.compact && !!theme.joinBody)
+                    : (!!workingTable.footer && !!theme.joinBody)
+            });
         });
 
         if (workingTable.footer) {
-            const footerRow = this.createFooterRow(workingTable);
-            if (theme.joinBody) {
-                parts.push(this.drawBorder(colWidths, visibleColumns, theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight));
-            }
-            parts.push(...this.drawGridRowLines(footerRow, colWidths, visibleColumns, theme, 0, false));
+            rowsToRender.push({
+                cells: this.createFooterRow(workingTable),
+                zebra: false,
+                rowIndex: 0,
+                defaultBorderAfter: false
+            });
         }
 
-        if (theme.bottomBody) {
-            parts.push(this.drawBorder(colWidths, visibleColumns, theme.bottomLeft, theme.bottomBody, theme.bottomJoin, theme.bottomRight));
-        }
+        const size = rowsToRender.length;
+
+        const checkBorder = (index: number, defaultDraw: boolean) => {
+            if (workingTable.drawHorizontalLine) {
+                return workingTable.drawHorizontalLine(index, size);
+            }
+            return defaultDraw;
+        };
+
+        const pushBorder = (draw: boolean, left: string, body: string, join: string, right: string) => {
+            left = left || theme.joinLeft;
+            body = body || theme.joinBody;
+            join = join || theme.joinJoin;
+            right = right || theme.joinRight;
+            if (draw && body) {
+                parts.push(this.drawBorder(colWidths, visibleColumns, left, body, join, right));
+            }
+        };
+
+        // 0. Top border
+        pushBorder(
+            checkBorder(0, !!theme.topBody),
+            theme.topLeft, theme.topBody, theme.topJoin, theme.topRight
+        );
+
+        // Render each row + subsequent border
+        rowsToRender.forEach((renderRow, index) => {
+            parts.push(...this.drawGridRowLines(renderRow.cells, colWidths, visibleColumns, theme, renderRow.rowIndex, renderRow.zebra, renderRow.colorOverride));
+
+            // Middle borders
+            if (index < size - 1) {
+                pushBorder(
+                    checkBorder(index + 1, renderRow.defaultBorderAfter),
+                    theme.joinLeft, theme.joinBody, theme.joinJoin, theme.joinRight
+                );
+            }
+        });
+
+        // N. Bottom border
+        pushBorder(
+            checkBorder(size, !!theme.bottomBody),
+            theme.bottomLeft, theme.bottomBody, theme.bottomJoin, theme.bottomRight
+        );
 
         return parts.join('\n');
     }
