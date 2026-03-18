@@ -1,4 +1,4 @@
-import { stripAnsi, isFullWidth, stringWidth } from '../src/utils/textUtils';
+import { stripAnsi, isFullWidth, isEmoji, isZeroWidth, stringWidth } from '../src/utils/textUtils';
 import { colorize } from '../src/utils/colors';
 import { mergeAdjacent } from '../src/utils/mergeUtils';
 import { Table } from '../src/Table';
@@ -64,14 +64,76 @@ describe('textUtils', () => {
             expect(stringWidth('\u001B[31mhello\u001B[39m')).toBe(5);
         });
 
-        it('should handle surrogate pairs (emoji)', () => {
-            // Emoji are above 0xFFFF, should be handled as surrogate pairs
-            expect(stringWidth('A')).toBe(1);
+        it('should handle empty string', () => {
             expect(stringWidth('')).toBe(0);
         });
 
-        it('should handle empty string', () => {
-            expect(stringWidth('')).toBe(0);
+        it('should return width 2 for single emoji', () => {
+            expect(stringWidth('😀')).toBe(2);
+            expect(stringWidth('🚀')).toBe(2);
+            expect(stringWidth('🎉')).toBe(2);
+        });
+
+        it('should return width 2 for emoji with skin tone modifier', () => {
+            expect(stringWidth('👍🏽')).toBe(2); // thumbs up + skin tone = one glyph
+        });
+
+        it('should return width 2 for emoji ZWJ sequence', () => {
+            expect(stringWidth('👨‍👩‍👧‍👦')).toBe(2); // family emoji = one glyph
+        });
+
+        it('should return width 2 for flag emoji', () => {
+            expect(stringWidth('🇺🇸')).toBe(4); // two regional indicators, each width 2
+        });
+
+        it('should return width 2 for emoji with variation selector', () => {
+            expect(stringWidth('❤️')).toBe(2); // heart + VS16
+        });
+
+        it('should handle common icon emoji as width 2', () => {
+            expect(stringWidth('✅')).toBe(2);
+            expect(stringWidth('❌')).toBe(2);
+            expect(stringWidth('⭐')).toBe(2);
+            expect(stringWidth('⚡')).toBe(2);
+        });
+
+        it('should handle mixed ASCII and emoji', () => {
+            expect(stringWidth('Hi 😀!')).toBe(6); // H(1)+i(1)+space(1)+😀(2)+!(1)
+        });
+
+        it('should handle zero-width characters', () => {
+            expect(stringWidth('\u200B')).toBe(0);  // zero-width space
+            expect(stringWidth('\u200D')).toBe(0);  // ZWJ
+            expect(stringWidth('\uFE0F')).toBe(0);  // variation selector
+        });
+    });
+
+    describe('isEmoji', () => {
+        it('should return true for emoji code points', () => {
+            expect(isEmoji(0x1f600)).toBe(true);  // 😀
+            expect(isEmoji(0x1f680)).toBe(true);  // 🚀
+            expect(isEmoji(0x2705)).toBe(true);   // ✅
+            expect(isEmoji(0x274c)).toBe(true);   // ❌
+            expect(isEmoji(0x2b50)).toBe(true);   // ⭐
+        });
+
+        it('should return false for ASCII and CJK', () => {
+            expect(isEmoji(65)).toBe(false);       // 'A'
+            expect(isEmoji(0x4e00)).toBe(false);   // CJK ideograph
+        });
+    });
+
+    describe('isZeroWidth', () => {
+        it('should return true for zero-width characters', () => {
+            expect(isZeroWidth(0x200b)).toBe(true);  // zero-width space
+            expect(isZeroWidth(0x200d)).toBe(true);  // ZWJ
+            expect(isZeroWidth(0xfe0f)).toBe(true);  // variation selector 16
+            expect(isZeroWidth(0x1f3fb)).toBe(true); // skin tone modifier
+        });
+
+        it('should return false for visible characters', () => {
+            expect(isZeroWidth(65)).toBe(false);      // 'A'
+            expect(isZeroWidth(0x1f600)).toBe(false); // 😀
         });
     });
 });

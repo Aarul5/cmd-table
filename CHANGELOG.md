@@ -1,5 +1,38 @@
 # Changelog
 
+## [1.5.0] - 2026-03-18
+
+### New Features
+
+-   **Emoji / icon width support**: The `stringWidth()` engine now correctly measures emoji and special Unicode characters. Table borders stay perfectly aligned when cells contain emoji, icons, flags, ZWJ sequences, or skin-tone modifiers.
+
+    ```ts
+    const t = new Table();
+    t.addColumn('Icon');
+    t.addColumn('Name');
+    t.addRow({ Icon: '😀', Name: 'Smile' });
+    t.addRow({ Icon: '🚀', Name: 'Rocket' });
+    t.addRow({ Icon: '👍🏽', Name: 'Thumbs up' });
+    t.addRow({ Icon: '👨‍👩‍👧‍👦', Name: 'Family' });
+    console.log(t.render());
+    ```
+
+    **What changed:**
+    -   Added `isEmoji()` — detects emoji code points (Emoticons, Dingbats, Misc Symbols, Transport, etc.) and returns width 2.
+    -   Added `isZeroWidth()` — detects zero-width joiners (ZWJ), variation selectors, skin-tone modifiers, combining marks, and tag characters, returning width 0.
+    -   `stringWidth()` now handles ZWJ sequences (e.g. 👨‍👩‍👧‍👦) as a single 2-cell glyph instead of counting each code point separately.
+    -   Control characters (0x00-0x1F, 0x7F-0x9F) are now correctly treated as zero-width.
+
+### Test Coverage
+
+-   Added 12 new emoji width tests to `tests/Utils.test.ts`: single emoji, ZWJ sequences, skin-tone modifiers, flags, variation selectors, common icons, mixed ASCII+emoji, and zero-width characters.
+-   Added `isEmoji` and `isZeroWidth` unit tests.
+-   Total test suite: **218 tests, 24 suites**.
+
+### Examples Added
+
+-   `examples/emoji_table.ts` — demonstrates emoji/icon width support with aligned borders.
+
 ## [1.4.0] - 2026-03-09
 
 ### New Features

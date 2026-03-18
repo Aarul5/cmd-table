@@ -2,7 +2,78 @@
 
 [![npm](https://img.shields.io/npm/v/cmd-table)](https://www.npmjs.com/package/cmd-table) [![license](https://img.shields.io/npm/l/cmd-table)](https://github.com/Aarul5/cmd-table/blob/main/LICENSE) [![CI](https://github.com/Aarul5/cmd-table/actions/workflows/ci.yml/badge.svg)](https://github.com/Aarul5/cmd-table/actions/workflows/ci.yml) [![downloads](https://img.shields.io/npm/dm/cmd-table)](https://www.npmjs.com/package/cmd-table) [![Documentation](https://img.shields.io/badge/documentation-live-brightgreen)](https://aarul5.github.io/cmd-table/)
 
-A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
+**The modern CLI table library for Node.js** — interactive TUI, sparklines, SQLite browsing, pivot tables, CSV/HTML parsing, and 7+ themes. Standalone, lightweight, TypeScript-first.
+
+> A drop-in upgrade from `cli-table3` and `table`, actively maintained in 2026.
+
+![cmd-table demo](./examples/cmd-table.gif)
+
+```bash
+npm install cmd-table
+```
+
+### 30-Second Quick Start
+
+```ts
+import { Table } from 'cmd-table';
+
+const table = new Table();
+table.addColumn('Name');
+table.addColumn('Role');
+table.addColumn('Status');
+
+table.addRow({ Name: 'Alice', Role: 'Dev', Status: 'Active' });
+table.addRow({ Name: 'Bob', Role: 'PM', Status: 'Offline' });
+
+console.log(table.render());
+```
+
+```
+╭────────┬──────┬─────────╮
+│ Name   │ Role │ Status  │
+├────────┼──────┼─────────┤
+│ Alice  │ Dev  │ Active  │
+│ Bob    │ PM   │ Offline │
+╰────────┴──────┴─────────╯
+```
+
+### Try More in 30 Seconds
+
+```bash
+# Pipe JSON into a beautiful table
+echo '[{"name":"Alice","age":30},{"name":"Bob","age":25}]' | npx cmd-table
+
+# Pipe CSV
+echo 'name,age\nAlice,30\nBob,25' | npx cmd-table
+
+# Interactive explorer for large datasets
+cat data.csv | npx cmd-table --interactive
+```
+
+## Why cmd-table?
+
+The top CLI table libraries for Node.js haven't been updated in years. cmd-table is a modern, actively maintained alternative with no production dependencies and 10x more features.
+
+| Feature | cmd-table | cli-table3 | table | tty-table |
+| :--- | :---: | :---: | :---: | :---: |
+| Standalone & lightweight | **Yes** | No | No | No |
+| Interactive TUI (search, filter, select) | **Yes** | No | No | No |
+| Async pagination (databases, APIs) | **Yes** | No | No | No |
+| SQL / SQLite integration | **Yes** | No | No | No |
+| Sparklines, Heatmaps & Progress bars | **Yes** | No | No | No |
+| Tree view | **Yes** | No | No | No |
+| Pivot tables & CrossTabs | **Yes** | No | No | No |
+| Diff tables (compare datasets) | **Yes** | No | No | No |
+| CSV / HTML parser (built-in) | **Yes** | No | No | No |
+| JSX / React syntax | **Yes** | No | No | No |
+| Header groups & footers | **Yes** | No | No | No |
+| Streaming renderer | **Yes** | No | Yes | No |
+| Multiple export formats | **Yes** | No | No | No |
+| Auto-merge cells | **Yes** | No | No | No |
+| Responsive layouts | **Yes** | No | No | Yes |
+| Per-column formatters | **Yes** | No | No | Yes |
+| TypeScript-first | **Yes** | Partial | Yes | No |
+| Actively maintained (2026) | **Yes** | No | No | Yes |
 
 <p>
   <a href="https://aarul5.github.io/cmd-table/">
@@ -25,7 +96,7 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
     *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
     *   **Header Groups**: Spans multiple columns under a super-header.
     *   **Footers & Summaries**: Automatic sum/avg/count or custom footers.
-*   **Data Operations**: Built-in column sorting (`asc`/`desc`), aggregation (pivot tables), and **matrix transposing (`transpose()`)**.
+*   **Data Operations**: Built-in column sorting (`asc`/`desc`), aggregation (pivot tables), **diff comparison (`Table.compare()`)**, and **matrix transposing (`transpose()`)**.
 *   **Integrations**:
     *   **SQL / SQLite**: Browse database tables with `SqlDataSource` adapter.
     *   **CSV Parser**: Parse CSV strings into tables with `CsvTable.from()`.
@@ -36,46 +107,13 @@ A modern, feature-rich, and enterprise-grade CLI table library for Node.js.
 *   **Per-Column Formatters**: Transform cell values for display via `formatter: (v, rowIndex) => string` — currency, dates, icons, and more.
 *   **CLI Tool**: Standalone executable to pipe JSON / CSV data into formatted tables.
 
-## Why cmd-table?
-
-cmd-table is the most feature-rich CLI table library for Node.js — with zero production dependencies. The top alternatives are either stagnant or lack modern features.
-
-| Feature | cmd-table | cli-table3 | table | tty-table |
-| :--- | :---: | :---: | :---: | :---: |
-| Standalone & lightweight | **Yes** | No | No | No |
-| Interactive TUI (search, filter, select) | **Yes** | No | No | No |
-| Async pagination (databases, APIs) | **Yes** | No | No | No |
-| SQL / SQLite integration | **Yes** | No | No | No |
-| Sparklines & Heatmaps | **Yes** | No | No | No |
-| Tree view | **Yes** | No | No | No |
-| Pivot tables & CrossTabs | **Yes** | No | No | No |
-| CSV / HTML parser (built-in) | **Yes** | No | No | No |
-| JSX / React syntax | **Yes** | No | No | No |
-| Header groups & footers | **Yes** | No | No | No |
-| Streaming renderer | **Yes** | No | Yes | No |
-| Multiple export formats | **Yes** | No | No | No |
-| Auto-merge cells | **Yes** | No | No | No |
-| Responsive layouts | **Yes** | No | No | Yes |
-| TypeScript-first | **Yes** | Partial | Yes | No |
-| Actively maintained (2025) | **Yes** | No | No | Yes |
-
-## Installation
-
-```bash
-npm install cmd-table
-```
-
 ## Basic Usage
-
-The library creates a beautiful "Rounded" table by default.
 
 ```ts
 import { Table } from 'cmd-table';
 
 const table = new Table();
-
-// First column defaults to 'cyan' color for keys
-table.addColumn('Name'); 
+table.addColumn('Name');
 table.addColumn('Role');
 table.addColumn('Status');
 
@@ -624,18 +662,21 @@ console.log(table.render());
 | Border control hooks (`drawHorizontalLine`) | v1.3.2 | Done |
 | Dual ESM/CJS exports | v1.3.3 | Done |
 | Diff table (side-by-side comparison) | v1.4.0 | Done |
+| Emoji/icon width support | v1.5.0 | Done |
 
 ### Planned
 
 | Feature | Priority | Status |
 | :--- | :--- | :--- |
-| Emoji/icon width support | Medium | Planned |
 | Browser console rendering | Medium | Planned |
 | Gantt-chart rows | Medium | Planned |
 | YAML export | Medium | Planned |
-| `cmd-table-jest-reporter` | Medium | Planned |
-| `cmd-table-vitest-reporter` | Medium | Planned |
+| `cmd-table-jest-reporter` | Very High | Planned |
+| `cmd-table-vitest-reporter` | High | Planned |
+| `cmd-table-oclif` plugin | High | Planned |
+| `cmd-table-ink` integration | Medium | Planned |
 
+> See [ROADMAP.md](ROADMAP.md) for full strategy, download boost checklist, and 2-week action plan.
 
 ## Contributing
 

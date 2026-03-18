@@ -23,6 +23,7 @@ export * from './renderers/HtmlRenderer';
 export * from './utils/colors';
 export { mergeAdjacent } from './utils/mergeUtils';
 export { addTree } from './utils/treeUtils';
+export { stripAnsi, stringWidth, isEmoji, isZeroWidth, isFullWidth } from './utils/textUtils';
 
 export * from './InteractiveTable';
 export * from './AsyncInteractiveTable';
