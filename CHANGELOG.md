@@ -33,6 +33,7 @@
 
 -   `examples/emoji_table.ts` — demonstrates emoji/icon width support with aligned borders.
 
+
 ## [1.4.0] - 2026-03-09
 
 ### New Features
