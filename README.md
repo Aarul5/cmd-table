@@ -676,7 +676,6 @@ console.log(table.render());
 | `cmd-table-oclif` plugin | High | Planned |
 | `cmd-table-ink` integration | Medium | Planned |
 
-> See [ROADMAP.md](ROADMAP.md) for full strategy, download boost checklist, and 2-week action plan.
 
 ## Contributing
 
