@@ -27,7 +27,7 @@ export class CmdTableVitestReporter {
     this.options = options;
   }
 
-  onFinished(files: VitestFile[] = []): void {
+  onFinished(files: VitestFile[] = [], errors: unknown[] = []): void {
     const suites = this.extractSuites(files);
     const tests = this.extractTests(files);
     const renderer = new TestResultTable(this.options);
@@ -59,6 +59,10 @@ export class CmdTableVitestReporter {
     process.stdout.write(
       `\n${status} — ${totalPassed} passed, ${totalFailed} failed, ${totalSkipped} skipped\n\n`,
     );
+
+    if (errors.length > 0) {
+      process.stdout.write(`\n${errors.length} unhandled error(s) during test run\n`);
+    }
   }
 
   onWatcherRerun(): void {
