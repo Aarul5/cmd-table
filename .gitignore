@@ -44,3 +44,6 @@ jest_output*.json
 # Debug
 debug.log
 temp.txt
+
+# Lock files (project uses pnpm)
+package-lock.json

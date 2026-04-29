@@ -62,7 +62,8 @@ jobs:
       (github.event_name == 'push' &&
        github.ref == 'refs/heads/main' &&
        startsWith(github.event.head_commit.message, 'release:')) ||
-      github.event_name == 'workflow_dispatch'
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == 'refs/heads/main')
 
     permissions:
       contents: read
@@ -87,13 +88,14 @@ jobs:
 
       - name: Parse package from commit message
         id: parse
+        env:
+          INPUT_PKG: ${{ github.event.inputs.package }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
         run: |
-          input_pkg="${{ github.event.inputs.package }}"
-          commit_msg="${{ github.event.head_commit.message }}"
-          if [ -n "$input_pkg" ]; then
-            pkg="$input_pkg"
+          if [ -n "$INPUT_PKG" ]; then
+            pkg="$INPUT_PKG"
           else
-            pkg=$(echo "$commit_msg" | sed -E 's/^release: ([a-z0-9@/_-]+).*/\1/')
+            pkg=$(echo "$COMMIT_MSG" | sed -E 's/^release: ([a-z0-9@/_-]+).*/\1/')
           fi
           echo "package=$pkg" >> $GITHUB_OUTPUT
           echo "Publishing package: $pkg"
