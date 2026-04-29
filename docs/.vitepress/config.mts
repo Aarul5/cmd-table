@@ -49,6 +49,14 @@ export default defineConfig({
                 items: [
                     { text: 'API Quick Reference', link: '/guide/api' }
                 ]
+            },
+            {
+                text: 'Ecosystem',
+                items: [
+                    { text: 'Jest Reporter', link: '/guide/jest-reporter' },
+                    { text: 'Vitest Reporter', link: '/guide/vitest-reporter' },
+                    { text: 'oclif Integration', link: '/guide/oclif' }
+                ]
             }
         ],
 
