@@ -54,9 +54,68 @@ jobs:
       - name: CLI smoke test
         run: node packages/cmd-table/dist/cli.js --help
 
+  docs-check:
+    name: Docs check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check each package has a README
+        run: |
+          missing=0
+          for pkg in packages/*/; do
+            name=$(node -e "try{const p=require('./$pkg/package.json');process.stdout.write(p.private?'skip':p.name)}catch(e){process.stdout.write('skip')}")
+            if [ "$name" = "skip" ]; then
+              continue
+            fi
+            if [ ! -f "$pkg/README.md" ]; then
+              echo "❌ Missing README.md in $pkg (package: $name)"
+              missing=1
+            else
+              echo "✅ $pkg has README.md"
+            fi
+          done
+          exit $missing
+
+  changeset-check:
+    name: Changeset check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for changeset on source changes
+        run: |
+          changed=$(git diff --name-only origin/main...HEAD | grep '^packages/' | grep -v '^packages/_template' | grep '/src/' || true)
+          changesets=$(git diff --name-only origin/main...HEAD | grep '^\.changeset/' || true)
+          if [ -n "$changed" ] && [ -z "$changesets" ]; then
+            echo "⚠️  Source files changed in packages/ but no changeset found."
+            echo "Run 'pnpm changeset' to document your change before merging."
+          else
+            echo "✅ Changeset present or no source changes detected."
+          fi
+
   publish:
     name: Publish to npm
-    needs: test
+    needs: [test, docs-check]
     runs-on: ubuntu-latest
     if: >
       (github.event_name == 'push' &&
