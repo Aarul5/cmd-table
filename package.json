@@ -13,10 +13,19 @@
     "format": "pnpm -r format",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm -r build && changeset publish"
+    "release": "pnpm -r build && changeset publish",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0"
+    "@changesets/cli": "^2.31.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0"
+  },
+  "lint-staged": {
+    "packages/**/*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "pnpm": {
     "onlyBuiltDependencies": [
