@@ -11,9 +11,13 @@
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "format": "pnpm -r format",
-    "changeset": "changeset"
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm -r build && changeset publish"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
       "better-sqlite3",
