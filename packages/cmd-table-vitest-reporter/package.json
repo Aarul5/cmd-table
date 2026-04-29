@@ -1,0 +1,65 @@
+{
+  "name": "cmd-table-vitest-reporter",
+  "version": "0.1.0",
+  "description": "Beautiful cmd-table output for Vitest test results",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "keywords": [
+    "vitest",
+    "reporter",
+    "cmd-table",
+    "cli",
+    "table",
+    "test"
+  ],
+  "author": {
+    "name": "Arul",
+    "url": "https://github.com/Aarul5"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aarul5/cmd-table.git",
+    "directory": "packages/cmd-table-vitest-reporter"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "vitest": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vitest": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@cmd-table/reporter-core": "workspace:*",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.24",
+    "cmd-table": "workspace:*",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.3.3",
+    "vitest": "^2.0.0"
+  }
+}
