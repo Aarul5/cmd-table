@@ -55,8 +55,9 @@ export class PivotTable {
           } else {
             // Numeric aggregations
             const nums = values.map((v) => Number(v)).filter((n) => !isNaN(n));
-            // @ts-ignore
-            result = Aggregations[algorithm](nums);
+            result = (Aggregations as unknown as Record<string, (nums: number[]) => number>)[
+              algorithm
+            ](nums);
           }
 
           rowData[pivotKey] = result;

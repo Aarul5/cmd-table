@@ -375,8 +375,8 @@ export class Table {
   public mergeAdjacent(columns?: string[]): void {
     const colIndices = columns
       ? columns
-        .map((name) => this.columns.findIndex((c) => c.name === name || c.key === name))
-        .filter((i) => i >= 0)
+          .map((name) => this.columns.findIndex((c) => c.name === name || c.key === name))
+          .filter((i) => i >= 0)
       : this.columns.map((_, i) => i);
 
     if (colIndices.length === 0) return;

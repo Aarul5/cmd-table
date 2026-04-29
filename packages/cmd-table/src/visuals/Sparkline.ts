@@ -13,7 +13,7 @@ export class Sparkline {
   public static generate(values: number[], options?: { min?: number; max?: number }): string {
     if (!values || values.length === 0) return '';
 
-    let min = options?.min ?? Math.min(...values);
+    const min = options?.min ?? Math.min(...values);
     let max = options?.max ?? Math.max(...values);
 
     // Avoid division by zero

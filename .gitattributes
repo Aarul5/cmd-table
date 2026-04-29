@@ -1,0 +1,15 @@
+# Normalize all text files to LF in the repository
+* text=auto eol=lf
+
+# Explicitly declare shell scripts as LF
+*.sh text eol=lf
+.husky/pre-commit text eol=lf
+.husky/pre-push text eol=lf
+
+# Binary files — no line ending conversion
+*.png binary
+*.gif binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
+*.ttf binary

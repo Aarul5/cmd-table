@@ -32,3 +32,15 @@ Features.md
 ROADMAP.md
 TASKS.md
 blog-devto.md
+
+# Monorepo — per-package artifacts
+packages/*/dist/
+packages/*/node_modules/
+packages/*/coverage/
+
+# Test artifacts
+jest_output*.json
+
+# Debug
+debug.log
+temp.txt

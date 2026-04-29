@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import { Table } from './Table';
 import { getTheme, ThemeName } from './themes/Theme';
+import { CsvTable } from './integrations/csv';
+import { InteractiveTable } from './InteractiveTable';
 import * as fs from 'fs';
 
 // Simple arg parser
@@ -72,8 +74,6 @@ async function main() {
     }
 
     if (isCsv) {
-      // Import lazily or use existing import
-      const { CsvTable } = require('./integrations/csv');
       const table = CsvTable.from(input, { hasHeader: true, delimiter: ',' });
 
       // Extract raw data from table for interactive mode?
@@ -82,7 +82,6 @@ async function main() {
       // OR we use the InteractiveTable (sync) for piped data since it's already in memory.
 
       if (options.interactive) {
-        const { InteractiveTable } = require('./InteractiveTable');
         const interactive = new InteractiveTable(table, {
           pageSize: 10,
           onExit: () => process.exit(0),
@@ -134,7 +133,6 @@ async function main() {
     data.forEach((row) => table.addRow(row));
 
     if (options.interactive) {
-      const { InteractiveTable } = require('./InteractiveTable');
       const interactive = new InteractiveTable(table, {
         pageSize: 10,
         onExit: () => process.exit(0),

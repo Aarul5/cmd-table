@@ -20,47 +20,47 @@ export function isEmoji(cp: number): boolean {
     (0x1f900 <= cp && cp <= 0x1f9ff) || // Supplemental Symbols & Pictographs
     (0x1fa00 <= cp && cp <= 0x1fa6f) || // Chess Symbols
     (0x1fa70 <= cp && cp <= 0x1faff) || // Symbols & Pictographs Extended-A
-    (0x1f004 === cp) ||                  // Mahjong Red Dragon
-    (0x1f0cf === cp) ||                  // Playing Card Black Joker
+    0x1f004 === cp || // Mahjong Red Dragon
+    0x1f0cf === cp || // Playing Card Black Joker
     (0x1f170 <= cp && cp <= 0x1f171) || // Neg Squared A/B
     (0x1f17e <= cp && cp <= 0x1f17f) || // Neg Squared O/P
-    (0x1f18e === cp) ||                  // Neg Squared AB
+    0x1f18e === cp || // Neg Squared AB
     (0x1f191 <= cp && cp <= 0x1f19a) || // Squared CL..VS
     (0x1f1e0 <= cp && cp <= 0x1f1ff) || // Regional Indicators (flags)
-    (0x231a <= cp && cp <= 0x231b) ||   // Watch, Hourglass
-    (0x23e9 <= cp && cp <= 0x23f3) ||   // Media symbols
-    (0x23f8 <= cp && cp <= 0x23fa) ||   // Pause, Record
-    (0x25aa <= cp && cp <= 0x25ab) ||   // Small squares
-    cp === 0x25b6 ||                     // Play button
-    cp === 0x25c0 ||                     // Reverse play
-    (0x25fb <= cp && cp <= 0x25fe) ||   // Medium squares
-    (0x2600 <= cp && cp <= 0x26ff) ||   // Misc Symbols
-    (0x2700 <= cp && cp <= 0x27bf) ||   // Dingbats
-    (0x2934 <= cp && cp <= 0x2935) ||   // Arrows
-    (0x2b05 <= cp && cp <= 0x2b07) ||   // Arrows
-    (0x2b1b <= cp && cp <= 0x2b1c) ||   // Large squares
-    cp === 0x2b50 ||                     // Star
-    cp === 0x2b55 ||                     // Circle
-    cp === 0x3030 ||                     // Wavy dash
-    cp === 0x303d ||                     // Part alternation mark
-    cp === 0x3297 ||                     // Circled Ideograph Congratulation
-    cp === 0x3299                        // Circled Ideograph Secret
+    (0x231a <= cp && cp <= 0x231b) || // Watch, Hourglass
+    (0x23e9 <= cp && cp <= 0x23f3) || // Media symbols
+    (0x23f8 <= cp && cp <= 0x23fa) || // Pause, Record
+    (0x25aa <= cp && cp <= 0x25ab) || // Small squares
+    cp === 0x25b6 || // Play button
+    cp === 0x25c0 || // Reverse play
+    (0x25fb <= cp && cp <= 0x25fe) || // Medium squares
+    (0x2600 <= cp && cp <= 0x26ff) || // Misc Symbols
+    (0x2700 <= cp && cp <= 0x27bf) || // Dingbats
+    (0x2934 <= cp && cp <= 0x2935) || // Arrows
+    (0x2b05 <= cp && cp <= 0x2b07) || // Arrows
+    (0x2b1b <= cp && cp <= 0x2b1c) || // Large squares
+    cp === 0x2b50 || // Star
+    cp === 0x2b55 || // Circle
+    cp === 0x3030 || // Wavy dash
+    cp === 0x303d || // Part alternation mark
+    cp === 0x3297 || // Circled Ideograph Congratulation
+    cp === 0x3299 // Circled Ideograph Secret
   );
 }
 
 export function isZeroWidth(cp: number): boolean {
   return (
-    cp === 0x200b ||                     // Zero-width space
-    cp === 0x200c ||                     // Zero-width non-joiner
-    cp === 0x200d ||                     // Zero-width joiner (ZWJ)
-    cp === 0x200e ||                     // Left-to-right mark
-    cp === 0x200f ||                     // Right-to-left mark
-    cp === 0xfeff ||                     // Zero-width no-break space (BOM)
-    (0xfe00 <= cp && cp <= 0xfe0f) ||   // Variation Selectors
+    cp === 0x200b || // Zero-width space
+    cp === 0x200c || // Zero-width non-joiner
+    cp === 0x200d || // Zero-width joiner (ZWJ)
+    cp === 0x200e || // Left-to-right mark
+    cp === 0x200f || // Right-to-left mark
+    cp === 0xfeff || // Zero-width no-break space (BOM)
+    (0xfe00 <= cp && cp <= 0xfe0f) || // Variation Selectors
     (0xe0100 <= cp && cp <= 0xe01ef) || // Variation Selectors Supplement
     (0x1f3fb <= cp && cp <= 0x1f3ff) || // Skin tone modifiers
-    (0x20d0 <= cp && cp <= 0x20ff) ||   // Combining Diacritical Marks for Symbols
-    (0xe0020 <= cp && cp <= 0xe007f)    // Tags (flag sequences)
+    (0x20d0 <= cp && cp <= 0x20ff) || // Combining Diacritical Marks for Symbols
+    (0xe0020 <= cp && cp <= 0xe007f) // Tags (flag sequences)
   );
 }
 

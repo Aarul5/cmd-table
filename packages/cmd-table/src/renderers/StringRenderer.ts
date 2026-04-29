@@ -241,10 +241,10 @@ export class StringRenderer implements IRenderer {
     const values = Array.isArray(table.footer)
       ? table.footer
       : table.columns.map((column) =>
-        table.footer && !Array.isArray(table.footer)
-          ? (table.footer[column.key] ?? table.footer[column.name] ?? '')
-          : '',
-      );
+          table.footer && !Array.isArray(table.footer)
+            ? (table.footer[column.key] ?? table.footer[column.name] ?? '')
+            : '',
+        );
     return values.map((value, index) => ({
       cell: new Cell(value),
       x: index,

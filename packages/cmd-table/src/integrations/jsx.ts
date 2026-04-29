@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 import { Table } from '../Table';
+import { BUILTIN_THEMES } from '../themes/Theme';
 
 // 1. Define JSX Intrinsic Elements
 export namespace JSX {
@@ -11,7 +12,11 @@ export namespace JSX {
 }
 
 // 2. Factory Function (h / createElement)
-export function createElement(tag: string | Function, props: any, ...children: any[]): any {
+export function createElement(
+  tag: string | ((...args: any[]) => any),
+  props: any,
+  ...children: any[]
+): any {
   // If tag is a component (function), call it
   if (typeof tag === 'function') {
     return tag({ ...props, children });
@@ -29,7 +34,8 @@ export function render(element: any): Table {
 
   const table = new Table({
     theme: element.props.theme
-      ? require('../themes/Theme').BUILTIN_THEMES[element.props.theme] || element.props.theme
+      ? (BUILTIN_THEMES as Record<string, unknown>)[element.props.theme as string] ||
+        element.props.theme
       : undefined,
     compact: element.props.compact,
   });
