@@ -90,4 +90,11 @@ describe('CmdTableVitestReporter', () => {
     new CmdTableVitestReporter().onWatcherRerun();
     expect(output).toContain('Re-running tests');
   });
+
+  it('only shows failed tests in verbose mode when failOnly: true', () => {
+    new CmdTableVitestReporter({ verbose: true, failOnly: true }).onFinished(files);
+    expect(output).toContain('POST /users');
+    expect(output).not.toContain('login works');
+    expect(output).not.toContain('GET /users');
+  });
 });

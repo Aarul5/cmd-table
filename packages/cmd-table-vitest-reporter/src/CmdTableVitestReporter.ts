@@ -39,7 +39,10 @@ export class CmdTableVitestReporter {
 
     if (this.options.verbose) {
       process.stdout.write('\n');
-      const verboseTable = renderer.buildVerboseTable(tests);
+      const testsToShow = this.options.failOnly
+        ? tests.filter((t) => t.status === 'failed')
+        : tests;
+      const verboseTable = renderer.buildVerboseTable(testsToShow);
       process.stdout.write(verboseTable.render() + '\n');
     }
 

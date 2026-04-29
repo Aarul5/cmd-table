@@ -13,11 +13,11 @@ npm install cmd-table cmd-table-vitest-reporter
 In `vitest.config.ts`:
 
 ```ts
-import CmdTableReporter from 'cmd-table-vitest-reporter';
+import { CmdTableVitestReporter } from 'cmd-table-vitest-reporter';
 
 export default {
   test: {
-    reporters: [new CmdTableReporter({ verbose: false, showSlowest: 5 })],
+    reporters: [new CmdTableVitestReporter({ verbose: false, showSlowest: 5 })],
   },
 };
 ```
