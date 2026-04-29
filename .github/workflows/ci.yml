@@ -166,4 +166,5 @@ jobs:
         run: pnpm --filter ${{ steps.parse.outputs.package }} build
 
       - name: Publish package
-        run: pnpm --filter ${{ steps.parse.outputs.package }} publish --access public --provenance
+        working-directory: packages/${{ steps.parse.outputs.package }}
+        run: npm publish --access public --provenance
