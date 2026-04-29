@@ -20,14 +20,14 @@
   ],
   "scripts": {
     "build": "tsup",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
+    "docs:dev": "vitepress dev ../../docs",
+    "docs:build": "vitepress build ../../docs",
+    "docs:preview": "vitepress preview ../../docs",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\"",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "keywords": [
     "cli",
@@ -86,7 +86,7 @@
   "homepage": "https://aarul5.github.io/cmd-table/",
   "license": "MIT",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "publishConfig": {
     "access": "public"

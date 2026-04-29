@@ -15,7 +15,8 @@ export default defineConfig({
                 text: 'Introduction',
                 items: [
                     { text: 'What is cmd-table?', link: '/guide/introduction' },
-                    { text: 'Getting Started', link: '/guide/getting-started' }
+                    { text: 'Getting Started', link: '/guide/getting-started' },
+                    { text: 'Migration from cli-table3', link: '/guide/migration' }
                 ]
             },
             {
