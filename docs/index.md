@@ -26,4 +26,6 @@ features:
     details: 7+ built-in themes, ANSI colors, zebra striping, compact mode, and fully customizable borders.
   - title: 📦 Import & Export
     details: Parse CSV and HTML tables. Export to Markdown, JSON, CSV, or HTML. Pipe data via CLI.
+  - title: 🧩 Ecosystem
+    details: First-class integrations for Jest, Vitest, and oclif — all as separate npm packages.
 ---
