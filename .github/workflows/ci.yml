@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish (e.g. cmd-table)'
+        required: false
+        type: string
 
 jobs:
   test:
@@ -83,8 +88,13 @@ jobs:
       - name: Parse package from commit message
         id: parse
         run: |
-          msg="${{ github.event.head_commit.message }}"
-          pkg=$(echo "$msg" | sed -E 's/^release: ([a-z0-9@/_-]+).*/\1/')
+          input_pkg="${{ github.event.inputs.package }}"
+          commit_msg="${{ github.event.head_commit.message }}"
+          if [ -n "$input_pkg" ]; then
+            pkg="$input_pkg"
+          else
+            pkg=$(echo "$commit_msg" | sed -E 's/^release: ([a-z0-9@/_-]+).*/\1/')
+          fi
           echo "package=$pkg" >> $GITHUB_OUTPUT
           echo "Publishing package: $pkg"
 
