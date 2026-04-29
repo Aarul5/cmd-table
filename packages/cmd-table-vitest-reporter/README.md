@@ -8,6 +8,16 @@ A Vitest custom reporter that replaces the default test output with a beautiful,
 npm install cmd-table cmd-table-vitest-reporter
 ```
 
+## Programmatic Usage
+
+If you need to instantiate the reporter directly in code (instead of via the string-array config), import the named export:
+
+```typescript
+import { CmdTableVitestReporter } from 'cmd-table-vitest-reporter';
+
+const reporter = new CmdTableVitestReporter({ verbose: true, showSlowest: 5 });
+```
+
 ## Configuration
 
 In `vitest.config.ts`:
