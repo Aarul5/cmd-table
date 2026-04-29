@@ -13,13 +13,14 @@ npm install cmd-table cmd-table-vitest-reporter
 In `vitest.config.ts`:
 
 ```ts
-import { CmdTableVitestReporter } from 'cmd-table-vitest-reporter';
+// vitest.config.ts
+import { defineConfig } from 'vitest/config';
 
-export default {
+export default defineConfig({
   test: {
-    reporters: [new CmdTableVitestReporter({ verbose: false, showSlowest: 5 })],
+    reporters: [['cmd-table-vitest-reporter', { verbose: true, showSlowest: 5 }]],
   },
-};
+});
 ```
 
 ## Options
@@ -30,6 +31,24 @@ export default {
 | `showSlowest` | `number`  | `undefined` | Render a "Slowest N Tests" table sorted by descending duration |
 | `failOnly`    | `boolean` | `false`     | In verbose mode, only show failed tests                        |
 | `theme`       | `string`  | `undefined` | Optional theme name passed through to cmd-table                |
+
+## Migrating from the Default Vitest Reporter
+
+Remove the built-in reporter and plug in `cmd-table-vitest-reporter`:
+
+```diff
+// vitest.config.ts
+import { defineConfig } from 'vitest/config'
+
+export default defineConfig({
+  test: {
+-   // default reporter (no config needed — Vitest uses it automatically)
++   reporters: [['cmd-table-vitest-reporter', { verbose: true }]],
+  },
+})
+```
+
+No other changes are needed. The reporter reads the same test results Vitest produces.
 
 ## Watch mode
 
