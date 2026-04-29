@@ -167,5 +167,3 @@ jobs:
 
       - name: Publish package
         run: pnpm --filter ${{ steps.parse.outputs.package }} publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
