@@ -6,7 +6,7 @@
 
 > A drop-in upgrade from `cli-table3` and `table`, actively maintained in 2026.
 
-![cmd-table demo](./examples/cmd-table.gif)
+![cmd-table demo](https://raw.githubusercontent.com/Aarul5/cmd-table/main/packages/cmd-table/examples/cmd-table.gif)
 
 ```bash
 npm install cmd-table
@@ -54,26 +54,26 @@ cat data.csv | npx cmd-table --interactive
 
 The top CLI table libraries for Node.js haven't been updated in years. cmd-table is a modern, actively maintained alternative with no production dependencies and 10x more features.
 
-| Feature | cmd-table | cli-table3 | table | tty-table |
-| :--- | :---: | :---: | :---: | :---: |
-| Standalone & lightweight | **Yes** | No | No | No |
-| Interactive TUI (search, filter, select) | **Yes** | No | No | No |
-| Async pagination (databases, APIs) | **Yes** | No | No | No |
-| SQL / SQLite integration | **Yes** | No | No | No |
-| Sparklines, Heatmaps & Progress bars | **Yes** | No | No | No |
-| Tree view | **Yes** | No | No | No |
-| Pivot tables & CrossTabs | **Yes** | No | No | No |
-| Diff tables (compare datasets) | **Yes** | No | No | No |
-| CSV / HTML parser (built-in) | **Yes** | No | No | No |
-| JSX / React syntax | **Yes** | No | No | No |
-| Header groups & footers | **Yes** | No | No | No |
-| Streaming renderer | **Yes** | No | Yes | No |
-| Multiple export formats | **Yes** | No | No | No |
-| Auto-merge cells | **Yes** | No | No | No |
-| Responsive layouts | **Yes** | No | No | Yes |
-| Per-column formatters | **Yes** | No | No | Yes |
-| TypeScript-first | **Yes** | Partial | Yes | No |
-| Actively maintained (2026) | **Yes** | No | No | Yes |
+| Feature                                  | cmd-table | cli-table3 | table | tty-table |
+| :--------------------------------------- | :-------: | :--------: | :---: | :-------: |
+| Standalone & lightweight                 |  **Yes**  |     No     |  No   |    No     |
+| Interactive TUI (search, filter, select) |  **Yes**  |     No     |  No   |    No     |
+| Async pagination (databases, APIs)       |  **Yes**  |     No     |  No   |    No     |
+| SQL / SQLite integration                 |  **Yes**  |     No     |  No   |    No     |
+| Sparklines, Heatmaps & Progress bars     |  **Yes**  |     No     |  No   |    No     |
+| Tree view                                |  **Yes**  |     No     |  No   |    No     |
+| Pivot tables & CrossTabs                 |  **Yes**  |     No     |  No   |    No     |
+| Diff tables (compare datasets)           |  **Yes**  |     No     |  No   |    No     |
+| CSV / HTML parser (built-in)             |  **Yes**  |     No     |  No   |    No     |
+| JSX / React syntax                       |  **Yes**  |     No     |  No   |    No     |
+| Header groups & footers                  |  **Yes**  |     No     |  No   |    No     |
+| Streaming renderer                       |  **Yes**  |     No     |  Yes  |    No     |
+| Multiple export formats                  |  **Yes**  |     No     |  No   |    No     |
+| Auto-merge cells                         |  **Yes**  |     No     |  No   |    No     |
+| Responsive layouts                       |  **Yes**  |     No     |  No   |    Yes    |
+| Per-column formatters                    |  **Yes**  |     No     |  No   |    Yes    |
+| TypeScript-first                         |  **Yes**  |  Partial   |  Yes  |    No     |
+| Actively maintained (2026)               |  **Yes**  |     No     |  No   |    Yes    |
 
 <p>
   <a href="https://aarul5.github.io/cmd-table/">
@@ -83,29 +83,29 @@ The top CLI table libraries for Node.js haven't been updated in years. cmd-table
 
 ## Features
 
-*   **Standalone & Lightweight**: Nothing extra to install.
-*   **Modern Theming**: "Rounded" theme by default, plus `honeywell`, `void`, `double`, `dots`, and more.
-*   **Rich Styling**: ANSI color support for headers and columns (defaults to **Magenta** headers and **Cyan** keys).
-*   **Advanced Layouts**: `colSpan`, `rowSpan`, auto-sizing, word-wrap, and specific column widths.
-*   **Responsive**: Hide or stack columns on smaller screens based on priority.
-*   **Interactive TUI**: Built-in interactive mode for exploring large datasets with search, filtering, and row selection.
-*   **Data Visualization**:
-    *   **Sparklines & Heatmaps**: Visualize trends and data density directly in cells.
-    *   **Progress Bars**: Render inline `████░░░░ 65%` progress indicators in any cell.
-    *   **Tree View**: Visualize hierarchical data with automatic indentation.
-    *   **Auto-Merge**: Automatically vertically merge identical adjacent cells.
-    *   **Header Groups**: Spans multiple columns under a super-header.
-    *   **Footers & Summaries**: Automatic sum/avg/count or custom footers.
-*   **Data Operations**: Built-in column sorting (`asc`/`desc`), aggregation (pivot tables), **diff comparison (`Table.compare()`)**, and **matrix transposing (`transpose()`)**.
-*   **Integrations**:
-    *   **SQL / SQLite**: Browse database tables with `SqlDataSource` adapter.
-    *   **CSV Parser**: Parse CSV strings into tables with `CsvTable.from()`.
-    *   **HTML Scraper**: Parse HTML tables directly.
-    *   **JSX Support**: Define tables declaratively.
-*   **Streaming**: Efficiently render large datasets row-by-row.
-*   **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
-*   **Per-Column Formatters**: Transform cell values for display via `formatter: (v, rowIndex) => string` — currency, dates, icons, and more.
-*   **CLI Tool**: Standalone executable to pipe JSON / CSV data into formatted tables.
+- **Standalone & Lightweight**: Nothing extra to install.
+- **Modern Theming**: "Rounded" theme by default, plus `honeywell`, `void`, `double`, `dots`, and more.
+- **Rich Styling**: ANSI color support for headers and columns (defaults to **Magenta** headers and **Cyan** keys).
+- **Advanced Layouts**: `colSpan`, `rowSpan`, auto-sizing, word-wrap, and specific column widths.
+- **Responsive**: Hide or stack columns on smaller screens based on priority.
+- **Interactive TUI**: Built-in interactive mode for exploring large datasets with search, filtering, and row selection.
+- **Data Visualization**:
+  - **Sparklines & Heatmaps**: Visualize trends and data density directly in cells.
+  - **Progress Bars**: Render inline `████░░░░ 65%` progress indicators in any cell.
+  - **Tree View**: Visualize hierarchical data with automatic indentation.
+  - **Auto-Merge**: Automatically vertically merge identical adjacent cells.
+  - **Header Groups**: Spans multiple columns under a super-header.
+  - **Footers & Summaries**: Automatic sum/avg/count or custom footers.
+- **Data Operations**: Built-in column sorting (`asc`/`desc`), aggregation (pivot tables), **diff comparison (`Table.compare()`)**, and **matrix transposing (`transpose()`)**.
+- **Integrations**:
+  - **SQL / SQLite**: Browse database tables with `SqlDataSource` adapter.
+  - **CSV Parser**: Parse CSV strings into tables with `CsvTable.from()`.
+  - **HTML Scraper**: Parse HTML tables directly.
+  - **JSX Support**: Define tables declaratively.
+- **Streaming**: Efficiently render large datasets row-by-row.
+- **Exports**: Export tables to Markdown, CSV, JSON, or HTML.
+- **Per-Column Formatters**: Transform cell values for display via `formatter: (v, rowIndex) => string` — currency, dates, icons, and more.
+- **CLI Tool**: Standalone executable to pipe JSON / CSV data into formatted tables.
 
 ## Basic Usage
 
@@ -137,11 +137,11 @@ const table = new Table();
 
 // Advanced Usage: Handle Selection
 const interactive = new InteractiveTable(table, {
-    onSelect: (rows) => {
-        console.log('Selected:', rows);
-        process.exit(0);
-    },
-    onExit: () => process.exit(0)
+  onSelect: (rows) => {
+    console.log('Selected:', rows);
+    process.exit(0);
+  },
+  onExit: () => process.exit(0),
 });
 
 interactive.start();
@@ -149,18 +149,19 @@ interactive.start();
 
 ### Interactive Controls
 
-| Key | Action |
-| :--- | :--- |
-| `Right` / `n` | Next Page |
-| `Left` / `p` | Previous Page |
-| `s` | Sort by Column (Cycle) |
-| `/` | **Search / Filter Rows** |
-| `Space` | **Select / Deselect Visible Rows** |
-| `Enter` | **Confirm Selection & Exit** |
-| `Esc` | Clear Search / Clear Selection |
-| `q` / `Ctrl+C` | Quit |
+| Key            | Action                             |
+| :------------- | :--------------------------------- |
+| `Right` / `n`  | Next Page                          |
+| `Left` / `p`   | Previous Page                      |
+| `s`            | Sort by Column (Cycle)             |
+| `/`            | **Search / Filter Rows**           |
+| `Space`        | **Select / Deselect Visible Rows** |
+| `Enter`        | **Confirm Selection & Exit**       |
+| `Esc`          | Clear Search / Clear Selection     |
+| `q` / `Ctrl+C` | Quit                               |
 
 To see it in action:
+
 ```bash
 npx ts-node examples/interactive_table.ts
 npx ts-node examples/large_table.ts
@@ -174,8 +175,12 @@ For very large datasets (databases, APIs), use `AsyncInteractiveTable` with an `
 import { AsyncInteractiveTable, IDataSource } from 'cmd-table';
 
 class MyApi implements IDataSource {
-    async count() { return 1000; }
-    async getRows(offset, limit) { return fetch(`/api/data?skip=${offset}&take=${limit}`); }
+  async count() {
+    return 1000;
+  }
+  async getRows(offset, limit) {
+    return fetch(`/api/data?skip=${offset}&take=${limit}`);
+  }
 }
 
 const app = new AsyncInteractiveTable(new MyApi(), new Table());
@@ -210,6 +215,7 @@ db.close();
 `SqlDataSource` supports pagination, column sorting, and full-text search across all columns.
 
 To run the included demo:
+
 ```bash
 npx ts-node examples/sqlite_demo.ts
 ```
@@ -253,7 +259,7 @@ Programmatically paginate your table data.
 ```ts
 // Get all pages at once
 const pages = table.getPages(10);
-pages.forEach(page => console.log(page.render()));
+pages.forEach((page) => console.log(page.render()));
 ```
 
 ### Exports
@@ -282,7 +288,7 @@ table.addColumn('Size');
 
 const files = [
   { Name: 'src', Size: '-', children: [{ Name: 'index.ts', Size: '2KB' }] },
-  { Name: 'package.json', Size: '1KB' }
+  { Name: 'package.json', Size: '1KB' },
 ];
 
 table.addTree('Name', files);
@@ -303,7 +309,7 @@ table.addColumn('Employee');
 table.addRows([
   { Department: 'Engineering', Employee: 'Alice' },
   { Department: 'Engineering', Employee: 'Bob' },
-  { Department: 'HR', Employee: 'Charlie' }
+  { Department: 'HR', Employee: 'Charlie' },
 ]);
 
 // Merges the 'Engineering' cells vertically
@@ -319,11 +325,11 @@ Generate a matrix view (e.g., Sales by Product vs Month).
 import { CrossTab } from 'cmd-table';
 
 const matrix = CrossTab.create(salesData, {
-    rowKey: 'Product',
-    colKey: 'Month',
-    valueKey: 'Amount',
-    aggregator: 'sum', // or 'count', 'first', 'last', or custom function
-    missingValue: 0
+  rowKey: 'Product',
+  colKey: 'Month',
+  valueKey: 'Amount',
+  aggregator: 'sum', // or 'count', 'first', 'last', or custom function
+  missingValue: 0,
 });
 console.log(matrix.render());
 ```
@@ -336,9 +342,9 @@ Group and aggregate data naturally.
 import { PivotTable } from 'cmd-table';
 
 const pivot = PivotTable.create(salesData, {
-    groupBy: 'Region',
-    targetColumn: 'Amount',
-    algorithm: 'sum' // or 'avg', 'min', 'max', 'count', or custom function
+  groupBy: 'Region',
+  targetColumn: 'Amount',
+  algorithm: 'sum', // or 'avg', 'min', 'max', 'count', or custom function
 });
 console.log(pivot.render());
 ```
@@ -379,8 +385,8 @@ Group columns or add summaries.
 const table = new Table({
   headerGroups: [
     { title: 'Identity', colSpan: 2 }, // Spans 'Name' and 'Role'
-    { title: 'Performance', colSpan: 2 } // Spans 'Score' and 'Grade'
-  ]
+    { title: 'Performance', colSpan: 2 }, // Spans 'Score' and 'Grade'
+  ],
 });
 
 // Automatic Summary (Sum, Avg, Count)
@@ -392,10 +398,7 @@ table.summarize(['Cost'], 'sum');
 Merge cells horizontally manually.
 
 ```ts
-table.addRow([
-  { content: 'Summary', colSpan: 2 },
-  'Status'
-]);
+table.addRow([{ content: 'Summary', colSpan: 2 }, 'Status']);
 ```
 
 ## Performance (Streaming)
@@ -433,48 +436,53 @@ const table = new Table();
 
 // 1. Manually Sort Rows (Custom Logic)
 table.rows.sort((a, b) => {
-    // Access raw cell content directly
-    const valA = a.cells[1].content; 
-    const valB = b.cells[1].content;
-    return valA - valB;
+  // Access raw cell content directly
+  const valA = a.cells[1].content;
+  const valB = b.cells[1].content;
+  return valA - valB;
 });
 
 // 2. Direct Cell Modification
-table.rows.forEach(row => {
-    const statusCell = row.cells[2];
-    if (statusCell.content === 'FAIL') {
-        // Manually wrap content in ANSI red
-        statusCell.content = `\x1b[31m${statusCell.content}\x1b[39m`; 
-    }
+table.rows.forEach((row) => {
+  const statusCell = row.cells[2];
+  if (statusCell.content === 'FAIL') {
+    // Manually wrap content in ANSI red
+    statusCell.content = `\x1b[31m${statusCell.content}\x1b[39m`;
+  }
 });
 
 // 3. Build Your Own Renderer
-const myCustomString = table.rows.map(row => row.cells[0].content).join(' | ');
+const myCustomString = table.rows.map((row) => row.cells[0].content).join(' | ');
 ```
 
 ## 🎨 Visual Enhancements
 
 ### Sparklines
+
 Render mini bar charts inside cells.
+
 ```typescript
 import { Sparkline } from 'cmd-table';
 
 table.addRow({
-    history: Sparkline.generate([10, 50, 90, 40, 20]) // Output:  ▄█▄▂
+  history: Sparkline.generate([10, 50, 90, 40, 20]), // Output:  ▄█▄▂
 });
 ```
 
 ### Heatmaps
+
 Colorize values based on a range (Low=Red, Mid=Yellow, High=Green).
+
 ```typescript
 import { Heatmap } from 'cmd-table';
 
 table.addRow({
-    efficiency: Heatmap.color(85, 0, 100) + '%' // Green text
+  efficiency: Heatmap.color(85, 0, 100) + '%', // Green text
 });
 ```
 
 ### Progress Bars
+
 Render inline Unicode block-character progress bars inside any cell, typically via a column formatter.
 
 ```typescript
@@ -483,14 +491,14 @@ import { Table, ProgressBar } from 'cmd-table';
 const t = new Table();
 t.addColumn({ name: 'Module', key: 'module' });
 t.addColumn({
-    name: 'Coverage',
-    key: 'coverage',
-    minWidth: 15,
-    align: 'right',
-    formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
+  name: 'Coverage',
+  key: 'coverage',
+  minWidth: 15,
+  align: 'right',
+  formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
 });
 t.addRow({ module: 'core', coverage: 82 });
-t.addRow({ module: 'cli',  coverage: 47 });
+t.addRow({ module: 'cli', coverage: 47 });
 console.log(t.render());
 // │ core │ ████████░░ 82% │
 // │ cli  │ ████░░░░░░ 47% │
@@ -498,15 +506,16 @@ console.log(t.render());
 
 **`ProgressBar.generate(value, max?, options?)` options:**
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `width` | `10` | Bar character width |
-| `filled` | `'█'` | Filled character |
-| `empty` | `'░'` | Empty character |
-| `showPercent` | `true` | Append `65%` label |
-| `label` | auto | Override with custom text, e.g. `'3/5'` |
+| Option        | Default | Description                             |
+| ------------- | ------- | --------------------------------------- |
+| `width`       | `10`    | Bar character width                     |
+| `filled`      | `'█'`   | Filled character                        |
+| `empty`       | `'░'`   | Empty character                         |
+| `showPercent` | `true`  | Append `65%` label                      |
+| `label`       | auto    | Override with custom text, e.g. `'3/5'` |
 
 ### Per-Column Formatter Callbacks
+
 Transform cell values for display using a `formatter` function.
 
 ```typescript
@@ -514,17 +523,19 @@ import { Table } from 'cmd-table';
 
 const t = new Table();
 t.addColumn({
-    name: 'Price', key: 'price',
-    minWidth: 10,
-    align: 'right',
-    formatter: (v) => '$' + Number(v).toFixed(2),
+  name: 'Price',
+  key: 'price',
+  minWidth: 10,
+  align: 'right',
+  formatter: (v) => '$' + Number(v).toFixed(2),
 });
 t.addColumn({
-    name: 'Status', key: 'status',
-    formatter: (v) => v === 'ok' ? '✅ OK' : '❌ Fail',
+  name: 'Status',
+  key: 'status',
+  formatter: (v) => (v === 'ok' ? '✅ OK' : '❌ Fail'),
 });
 t.addRow({ price: 9.5, status: 'ok' });
-t.addRow({ price: 99,  status: 'fail' });
+t.addRow({ price: 99, status: 'fail' });
 console.log(t.render());
 ```
 
@@ -533,15 +544,16 @@ console.log(t.render());
 - Works with `color`, `align`, `wrapWord`, and `maxWidth`.
 
 ### Conditional Row Styling
+
 Apply an ANSI color to an entire row dynamically based on the data object.
 
 ```typescript
 const table = new Table({
-    rowColor: (row, index) => {
-        if (Number(row.score) >= 90) return 'green';
-        if (Number(row.score) >= 70) return 'yellow';
-        return 'red';
-    }
+  rowColor: (row, index) => {
+    if (Number(row.score) >= 90) return 'green';
+    if (Number(row.score) >= 70) return 'yellow';
+    return 'red';
+  },
 });
 ```
 
@@ -550,31 +562,35 @@ const table = new Table({
 - Return `undefined` to leave the row unstyled.
 
 ### Manual Border Control (`drawHorizontalLine`)
+
 Gain fine-grained control over which horizontal dividers are drawn using the `drawHorizontalLine` hook. Each possible horizontal line is assigned an index from `0` (top) to `size` (bottom).
 
 ```typescript
 const table = new Table({
-    drawHorizontalLine: (index, size) => {
-        // Draw only the top, header separator, and bottom border
-        return index === 0 || index === 1 || index === size;
-    }
+  drawHorizontalLine: (index, size) => {
+    // Draw only the top, header separator, and bottom border
+    return index === 0 || index === 1 || index === size;
+  },
 });
 ```
 
 ### Advanced Borders
+
 New themes are available:
+
 ```typescript
 import { BUILTIN_THEMES } from 'cmd-table';
 
 const table = new Table({
-    theme: BUILTIN_THEMES.doubleHeader // Double lines for header, single for body
-    // or BUILTIN_THEMES.thinRounded
+  theme: BUILTIN_THEMES.doubleHeader, // Double lines for header, single for body
+  // or BUILTIN_THEMES.thinRounded
 });
 ```
 
 ## 🔌 Integrations
 
 ### CSV Parser
+
 Parse CSV strings directly into tables — supports headers, quoted fields, custom delimiters, and CRLF.
 
 ```typescript
@@ -589,6 +605,7 @@ const tsv = CsvTable.from(tsvData, { delimiter: '\t' });
 ```
 
 ### HTML Scraper
+
 Parse HTML tables directly into `cmd-table`. (Zero-dependency, regex-based).
 
 ```typescript
@@ -600,6 +617,7 @@ console.log(table.render());
 ```
 
 ### Data Exports
+
 Export tables to standard formats using dedicated helpers (symmetric to `from` methods).
 
 ```typescript
@@ -616,16 +634,17 @@ const json = JsonTable.toJson(table);
 ```
 
 ### React / JSX Support
+
 Define tables using JSX syntax (works with any JSX runtime or our lightweight factory).
 
 ```tsx
 import { h, render } from 'cmd-table';
 
 const element = (
-    <cmd-table theme="doubleHeader">
-        <cmd-column name="Task" key="task" />
-        <cmd-row task="Do Chores" />
-    </cmd-table>
+  <cmd-table theme="doubleHeader">
+    <cmd-column name="Task" key="task" />
+    <cmd-row task="Do Chores" />
+  </cmd-table>
 );
 
 const table = render(element);
@@ -636,46 +655,45 @@ console.log(table.render());
 
 ### Shipped
 
-| Feature | Version | Status |
-| :--- | :--- | :--- |
-| Core table rendering with themes | v1.0.0 | Done |
-| Interactive TUI (search, filter, select) | v1.0.0 | Done |
-| Sparklines & Heatmaps | v1.0.0 | Done |
-| Pivot tables & CrossTabs | v1.0.0 | Done |
-| HTML scraper & JSX support | v1.0.0 | Done |
-| Exports (Markdown, CSV, JSON, HTML) | v1.0.0 | Done |
-| Responsive layouts | v1.0.0 | Done |
-| Streaming renderer | v1.0.0 | Done |
-| Header groups & footers | v1.0.0 | Done |
-| Auto-merge cells | v1.0.0 | Done |
-| Tree view | v1.0.0 | Done |
-| Async Interactive Table & IDataSource | v1.1.0 | Done |
-| CLI tool with `--interactive` flag | v1.1.0 | Done |
-| SQL / SQLite integration | v1.2.0 | Done |
-| CSV parser (`CsvTable.from()`) | v1.2.0 | Done |
-| 183 tests, 16 modules at 100% coverage | v1.2.0–v1.3.0 | Done |
-| VitePress documentation site | v1.2.2 | Done |
-| Per-column formatter callbacks | v1.3.0 | Done |
-| Progress bars in cells (`ProgressBar`) | v1.3.0 | Done |
-| Conditional row coloring / zebra striping | v1.3.1 | Done |
-| Transposed table (`table.transpose()`) | v1.3.1 | Done |
-| Border control hooks (`drawHorizontalLine`) | v1.3.2 | Done |
-| Dual ESM/CJS exports | v1.3.3 | Done |
-| Diff table (side-by-side comparison) | v1.4.0 | Done |
-| Emoji/icon width support | v1.5.0 | Done |
+| Feature                                     | Version       | Status |
+| :------------------------------------------ | :------------ | :----- |
+| Core table rendering with themes            | v1.0.0        | Done   |
+| Interactive TUI (search, filter, select)    | v1.0.0        | Done   |
+| Sparklines & Heatmaps                       | v1.0.0        | Done   |
+| Pivot tables & CrossTabs                    | v1.0.0        | Done   |
+| HTML scraper & JSX support                  | v1.0.0        | Done   |
+| Exports (Markdown, CSV, JSON, HTML)         | v1.0.0        | Done   |
+| Responsive layouts                          | v1.0.0        | Done   |
+| Streaming renderer                          | v1.0.0        | Done   |
+| Header groups & footers                     | v1.0.0        | Done   |
+| Auto-merge cells                            | v1.0.0        | Done   |
+| Tree view                                   | v1.0.0        | Done   |
+| Async Interactive Table & IDataSource       | v1.1.0        | Done   |
+| CLI tool with `--interactive` flag          | v1.1.0        | Done   |
+| SQL / SQLite integration                    | v1.2.0        | Done   |
+| CSV parser (`CsvTable.from()`)              | v1.2.0        | Done   |
+| 183 tests, 16 modules at 100% coverage      | v1.2.0–v1.3.0 | Done   |
+| VitePress documentation site                | v1.2.2        | Done   |
+| Per-column formatter callbacks              | v1.3.0        | Done   |
+| Progress bars in cells (`ProgressBar`)      | v1.3.0        | Done   |
+| Conditional row coloring / zebra striping   | v1.3.1        | Done   |
+| Transposed table (`table.transpose()`)      | v1.3.1        | Done   |
+| Border control hooks (`drawHorizontalLine`) | v1.3.2        | Done   |
+| Dual ESM/CJS exports                        | v1.3.3        | Done   |
+| Diff table (side-by-side comparison)        | v1.4.0        | Done   |
+| Emoji/icon width support                    | v1.5.0        | Done   |
 
 ### Planned
 
-| Feature | Priority | Status |
-| :--- | :--- | :--- |
-| Browser console rendering | Medium | Planned |
-| Gantt-chart rows | Medium | Planned |
-| YAML export | Medium | Planned |
-| `cmd-table-jest-reporter` | Very High | Planned |
-| `cmd-table-vitest-reporter` | High | Planned |
-| `cmd-table-oclif` plugin | High | Planned |
-| `cmd-table-ink` integration | Medium | Planned |
-
+| Feature                     | Priority  | Status  |
+| :-------------------------- | :-------- | :------ |
+| Browser console rendering   | Medium    | Planned |
+| Gantt-chart rows            | Medium    | Planned |
+| YAML export                 | Medium    | Planned |
+| `cmd-table-jest-reporter`   | Very High | Planned |
+| `cmd-table-vitest-reporter` | High      | Planned |
+| `cmd-table-oclif` plugin    | High      | Planned |
+| `cmd-table-ink` integration | Medium    | Planned |
 
 ## Contributing
 

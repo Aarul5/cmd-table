@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2] - 2026-04-30
+
+### Fixed
+
+- README demo GIF now uses an absolute raw GitHub URL so it renders correctly on npm after the monorepo move.
+- Added `repository.directory` to `package.json` so npm rewrites relative links to the correct subpath.
+
 ## [1.5.1] - 2026-04-29
 
 ### Internal
