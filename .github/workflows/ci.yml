@@ -142,11 +142,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          registry-url: 'https://registry.npmjs.org'
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Configure npm for Trusted Publishing
+        run: npm config set //registry.npmjs.org/:_authToken ""
 
       - name: Parse package from commit message
         id: parse
