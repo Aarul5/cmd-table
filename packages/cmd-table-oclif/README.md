@@ -5,7 +5,7 @@ Drop-in replacement for `cli-ux` table in [oclif](https://oclif.io/) commands. P
 ## Install
 
 ```bash
-npm install cmd-table cmd-table-oclif
+npm install cmd-table-oclif
 ```
 
 ## Usage

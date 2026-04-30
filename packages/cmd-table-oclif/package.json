@@ -1,6 +1,6 @@
 {
   "name": "cmd-table-oclif",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "cmd-table integration for oclif CLI commands — drop-in replacement for cli-ux table",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -47,8 +47,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "cmd-table": "^1.5.0"
+  },
   "peerDependencies": {
-    "cmd-table": "^1.5.0",
     "@oclif/core": ">=3.0.0"
   },
   "peerDependenciesMeta": {
