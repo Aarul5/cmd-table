@@ -1,6 +1,6 @@
 {
   "name": "cmd-table-vitest-reporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Beautiful cmd-table output for Vitest test results",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -47,6 +47,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "cmd-table": "^1.5.0"
   },
   "peerDependencies": {
     "vitest": ">=1.0.0"

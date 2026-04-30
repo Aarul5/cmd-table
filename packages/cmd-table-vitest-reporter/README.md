@@ -5,7 +5,7 @@ A Vitest custom reporter that replaces the default test output with a beautiful,
 ## Install
 
 ```bash
-npm install cmd-table cmd-table-vitest-reporter
+npm install cmd-table-vitest-reporter
 ```
 
 ## Programmatic Usage
