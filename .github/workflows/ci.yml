@@ -171,8 +171,11 @@ jobs:
           echo "package=$pkg" >> $GITHUB_OUTPUT
           echo "Publishing package: $pkg"
 
-      - name: Build package
-        run: pnpm --filter ${{ steps.parse.outputs.package }} build
+      - name: Build package (and workspace deps in order)
+        run: |
+          pnpm --filter cmd-table build
+          pnpm --filter '@cmd-table/reporter-core' build
+          pnpm --filter ${{ steps.parse.outputs.package }} build
 
       - name: Publish package
         working-directory: packages/${{ steps.parse.outputs.package }}
