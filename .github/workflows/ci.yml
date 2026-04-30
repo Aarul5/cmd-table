@@ -148,8 +148,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Remove empty auth token left by setup-node
-        run: npm config delete //registry.npmjs.org/:_authToken
+      - name: Remove auth token from npmrc (let OIDC Trusted Publishing take over)
+        run: echo "registry=https://registry.npmjs.org/" > "$NPM_CONFIG_USERCONFIG"
 
       - name: Parse package from commit message
         id: parse
