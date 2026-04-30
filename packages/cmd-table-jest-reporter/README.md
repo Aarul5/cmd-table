@@ -5,7 +5,7 @@ A Jest custom reporter that replaces the default test output with a clean, struc
 ## Install
 
 ```bash
-npm install cmd-table cmd-table-jest-reporter
+npm install cmd-table-jest-reporter
 ```
 
 ## Configuration
@@ -14,9 +14,7 @@ In your `jest.config.js`, replace (or extend) the default reporters:
 
 ```js
 module.exports = {
-  reporters: [
-    ['cmd-table-jest-reporter', { verbose: false, showSlowest: 5 }]
-  ]
+  reporters: [['cmd-table-jest-reporter', { verbose: false, showSlowest: 5 }]],
 };
 ```
 
@@ -24,17 +22,14 @@ To keep Jest's default output alongside the table summary:
 
 ```js
 module.exports = {
-  reporters: [
-    'default',
-    ['cmd-table-jest-reporter', { verbose: true, showSlowest: 3 }]
-  ]
+  reporters: ['default', ['cmd-table-jest-reporter', { verbose: true, showSlowest: 3 }]],
 };
 ```
 
 ## Options
 
 | Option        | Type      | Default     | Description                                                                 |
-|---------------|-----------|-------------|-----------------------------------------------------------------------------|
+| ------------- | --------- | ----------- | --------------------------------------------------------------------------- |
 | `verbose`     | `boolean` | `false`     | Show a per-test breakdown table in addition to the suite summary            |
 | `showSlowest` | `number`  | `0`         | Show the N slowest tests in a ranked table. Set to `0` to disable           |
 | `failOnly`    | `boolean` | `false`     | In verbose mode, only show failed tests (ignored when `verbose` is `false`) |

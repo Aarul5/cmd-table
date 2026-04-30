@@ -1,6 +1,6 @@
 {
   "name": "cmd-table-jest-reporter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Beautiful cmd-table output for Jest test results",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -48,8 +48,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "cmd-table": "^1.5.0"
+  },
   "peerDependencies": {
-    "cmd-table": "^1.5.0",
     "jest": ">=29.0.0"
   },
   "devDependencies": {
