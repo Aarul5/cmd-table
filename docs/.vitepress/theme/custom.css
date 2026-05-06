@@ -1,0 +1,147 @@
+/**
+ * cmd-table — VitePress theme overrides.
+ *
+ * Brand palette mirrors the library's defaults: magenta for headers / primary,
+ * cyan for accents / keys. Tuned for both light and dark modes.
+ */
+
+:root {
+  /* Brand */
+  --vp-c-brand-1: #c026d3; /* magenta-600  — primary */
+  --vp-c-brand-2: #d946ef; /* magenta-500  — hover */
+  --vp-c-brand-3: #e879f9; /* magenta-400  — active */
+  --vp-c-brand-soft: rgba(217, 70, 239, 0.14);
+
+  /* Hero gradient — magenta → cyan, the cmd-table signature */
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: -webkit-linear-gradient(120deg, #d946ef 30%, #06b6d4);
+
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #d946ef 40%, #06b6d4 60%);
+  --vp-home-hero-image-filter: blur(48px);
+
+  /* Code blocks — slightly higher contrast in light mode */
+  --vp-code-line-height: 1.6;
+  --vp-code-font-size: 13.5px;
+}
+
+.dark {
+  --vp-c-brand-soft: rgba(217, 70, 239, 0.2);
+}
+
+/* ---------- Hero polish ---------- */
+
+.VPHero .name,
+.VPHero .text {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.VPHero .tagline {
+  max-width: 640px;
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--vp-c-text-2);
+}
+
+/* ---------- Feature cards ---------- */
+
+.VPFeature {
+  border: 1px solid var(--vp-c-divider);
+  transition:
+    border-color 160ms,
+    transform 160ms;
+}
+
+.VPFeature:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+}
+
+.VPFeature .icon {
+  background: var(--vp-c-brand-soft);
+  font-size: 22px;
+}
+
+/* ---------- Code blocks ---------- */
+
+div[class*='language-'] {
+  border-radius: 10px;
+}
+
+/* Make plain ``` blocks (rendered table output) feel like a terminal */
+div[class='language-'] {
+  background-color: #0d1117;
+}
+
+div[class='language-'] pre code {
+  color: #d4d4d4;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+}
+
+/* ---------- Tables ---------- */
+
+.vp-doc table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+}
+
+.vp-doc table th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.vp-doc table th,
+.vp-doc table td {
+  padding: 10px 14px;
+}
+
+/* ---------- Home extras (custom section under hero) ---------- */
+
+.home-extras {
+  max-width: 1152px;
+  margin: 0 auto;
+  padding: 64px 24px 96px;
+}
+
+.home-extras h2 {
+  margin-top: 56px;
+  padding-top: 0;
+  border-top: none;
+  font-size: 28px;
+  letter-spacing: -0.01em;
+}
+
+.home-extras h2:first-of-type {
+  margin-top: 0;
+}
+
+.home-extras > p {
+  font-size: 16px;
+  color: var(--vp-c-text-2);
+}
+
+/* Stack the install bar + code preview on smaller screens */
+@media (max-width: 720px) {
+  .home-extras {
+    padding: 40px 20px 64px;
+  }
+}
+
+/* ---------- Sidebar tweaks ---------- */
+
+.VPSidebarItem.level-0 > .item > .text {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--vp-c-text-2);
+}
+
+/* ---------- Anchor link spacing on long recipes pages ---------- */
+
+.vp-doc h2,
+.vp-doc h3 {
+  scroll-margin-top: 80px;
+}
