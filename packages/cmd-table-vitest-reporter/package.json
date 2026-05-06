@@ -49,7 +49,7 @@
     "access": "public"
   },
   "dependencies": {
-    "cmd-table": "^1.5.4"
+    "cmd-table": "workspace:*"
   },
   "peerDependencies": {
     "vitest": ">=1.0.0"

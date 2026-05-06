@@ -102,8 +102,8 @@ importers:
   packages/cmd-table-jest-reporter:
     dependencies:
       cmd-table:
-        specifier: ^1.5.0
-        version: 1.5.2
+        specifier: workspace:*
+        version: link:../cmd-table
     devDependencies:
       '@cmd-table/reporter-core':
         specifier: workspace:*
@@ -130,8 +130,8 @@ importers:
   packages/cmd-table-oclif:
     dependencies:
       cmd-table:
-        specifier: ^1.5.0
-        version: 1.5.2
+        specifier: workspace:*
+        version: link:../cmd-table
     devDependencies:
       '@oclif/core':
         specifier: ^4.0.0
@@ -158,8 +158,8 @@ importers:
   packages/cmd-table-vitest-reporter:
     dependencies:
       cmd-table:
-        specifier: ^1.5.0
-        version: 1.5.2
+        specifier: workspace:*
+        version: link:../cmd-table
     devDependencies:
       '@cmd-table/reporter-core':
         specifier: workspace:*
@@ -1694,11 +1694,6 @@ packages:
   cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
-
-  cmd-table@1.5.2:
-    resolution: {integrity: sha512-YyE90szRZmugRJ7HuDqpNWkQucsyb/ikML/fqircZG7wlNRVXOphDJUWQQPfKN83YeRcGeser8ol694AT0s+Vw==}
-    engines: {node: '>=20.0.0'}
-    hasBin: true
 
   co@4.6.0:
     resolution: {integrity: sha512-QVb0dM5HvG+uaxitm8wONl7jltx8dqhfU33DcqtOZcLSVIKSDDLDi7+0LbAKiyI8hD9u42m2YxXSkMGWThaecQ==}
@@ -5113,8 +5108,6 @@ snapshots:
       string-width: 4.2.3
       strip-ansi: 6.0.1
       wrap-ansi: 7.0.0
-
-  cmd-table@1.5.2: {}
 
   co@4.6.0: {}
 

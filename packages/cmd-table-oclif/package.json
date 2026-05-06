@@ -48,7 +48,7 @@
     "access": "public"
   },
   "dependencies": {
-    "cmd-table": "^1.5.4"
+    "cmd-table": "workspace:*"
   },
   "peerDependencies": {
     "@oclif/core": ">=3.0.0"
