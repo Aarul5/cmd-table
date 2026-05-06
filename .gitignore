@@ -38,6 +38,10 @@ packages/*/dist/
 packages/*/node_modules/
 packages/*/coverage/
 
+# VitePress build artifacts
+docs/.vitepress/cache/
+docs/.vitepress/dist/
+
 # Test artifacts
 jest_output*.json
 
