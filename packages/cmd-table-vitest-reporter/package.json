@@ -49,7 +49,7 @@
     "access": "public"
   },
   "dependencies": {
-    "cmd-table": "^1.5.0"
+    "cmd-table": "^1.5.4"
   },
   "peerDependencies": {
     "vitest": ">=1.0.0"
