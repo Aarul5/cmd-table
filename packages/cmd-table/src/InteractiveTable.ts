@@ -1,6 +1,7 @@
 import * as readline from 'readline';
 import { Table } from './Table';
 import { Row } from './Row';
+import { Cell } from './Cell';
 
 export interface IInteractiveOptions {
   pageSize?: number;
@@ -308,10 +309,20 @@ export class InteractiveTable {
       // Filter cells
       const newCells = validIndices.map((i) => {
         const cell = row.cells[i];
-        if (isSelected) {
-          return { ...cell, content: `\x1b[32m${cell.content}\x1b[0m` } as any;
-        }
-        return cell;
+        if (!isSelected) return cell;
+        // Clone via the Cell constructor so the prototype (and getString())
+        // is preserved. A plain `{...cell}` spread loses the methods and
+        // crashes the renderer at calculateColumnWidths.
+        const highlighted = new Cell({
+          content: `\x1b[32m${cell.content}\x1b[0m`,
+          colSpan: cell.colSpan,
+          rowSpan: cell.rowSpan,
+          align: cell.align,
+          vAlign: cell.vAlign,
+          color: cell.color,
+        });
+        highlighted.merged = cell.merged;
+        return highlighted;
       });
 
       const nextRow = new Row(row.getData(), viewTable);
