@@ -24,7 +24,7 @@
     "node": ">=20.0.0"
   },
   "peerDependencies": {
-    "cmd-table": "^1.5.4"
+    "cmd-table": "^1.6.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

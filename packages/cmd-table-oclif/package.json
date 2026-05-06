@@ -1,6 +1,6 @@
 {
   "name": "cmd-table-oclif",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "cmd-table integration for oclif CLI commands — drop-in replacement for cli-ux table",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

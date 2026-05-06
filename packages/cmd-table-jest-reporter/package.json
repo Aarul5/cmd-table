@@ -1,6 +1,6 @@
 {
   "name": "cmd-table-jest-reporter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Beautiful cmd-table output for Jest test results",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
