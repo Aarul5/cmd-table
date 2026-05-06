@@ -5,12 +5,6 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
-    inputs:
-      package:
-        description: 'Package to publish (e.g. cmd-table)'
-        required: false
-        type: string
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
@@ -42,10 +36,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build all packages
-        run: |
-          pnpm --filter cmd-table build
-          pnpm --filter '@cmd-table/reporter-core' build
-          pnpm --filter cmd-table-jest-reporter --filter cmd-table-vitest-reporter --filter cmd-table-oclif --filter _template build
+        run: pnpm --filter cmd-table build && pnpm --filter '@cmd-table/reporter-core' build && pnpm -r build
 
       - name: Syntax check
         run: |
@@ -94,6 +85,34 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Require changeset for source changes
+        run: |
+          changed=$(git diff --name-only origin/main...HEAD | grep '^packages/' | grep -v '^packages/_template' | grep '/src/' || true)
+          changesets=$(git diff --name-only origin/main...HEAD | grep '^\.changeset/[^/]*\.md$' | grep -v 'README\.md' || true)
+          if [ -n "$changed" ] && [ -z "$changesets" ]; then
+            echo "::error::Source files changed in packages/ but no changeset found."
+            echo "::error::Run 'pnpm changeset' to document your change before merging."
+            exit 1
+          fi
+          echo "✅ Changeset present or no source changes detected."
+
+  release:
+    name: Release
+    needs: [test, docs-check]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -101,48 +120,6 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Check for changeset on source changes
-        run: |
-          changed=$(git diff --name-only origin/main...HEAD | grep '^packages/' | grep -v '^packages/_template' | grep '/src/' || true)
-          changesets=$(git diff --name-only origin/main...HEAD | grep '^\.changeset/' || true)
-          if [ -n "$changed" ] && [ -z "$changesets" ]; then
-            echo "⚠️  Source files changed in packages/ but no changeset found."
-            echo "Run 'pnpm changeset' to document your change before merging."
-          else
-            echo "✅ Changeset present or no source changes detected."
-          fi
-
-  publish:
-    name: Publish to npm
-    needs: [test, docs-check]
-    runs-on: ubuntu-latest
-    if: >
-      (github.event_name == 'push' &&
-       github.ref == 'refs/heads/main' &&
-       startsWith(github.event.head_commit.message, 'release:')) ||
-      (github.event_name == 'workflow_dispatch' &&
-       github.ref == 'refs/heads/main')
-
-    permissions:
-      contents: read
-      id-token: write
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
-
-      - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
@@ -157,26 +134,13 @@ jobs:
       - name: Remove auth token from npmrc (let OIDC Trusted Publishing take over)
         run: echo "registry=https://registry.npmjs.org/" > "$NPM_CONFIG_USERCONFIG"
 
-      - name: Parse package from commit message
-        id: parse
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
+        with:
+          publish: pnpm run release
+          version: pnpm run version-packages
+          title: 'chore: version packages'
+          commit: 'chore: version packages'
         env:
-          INPUT_PKG: ${{ github.event.inputs.package }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-        run: |
-          if [ -n "$INPUT_PKG" ]; then
-            pkg="$INPUT_PKG"
-          else
-            pkg=$(echo "$COMMIT_MSG" | sed -E 's/^release: ([a-z0-9@/_-]+).*/\1/')
-          fi
-          echo "package=$pkg" >> $GITHUB_OUTPUT
-          echo "Publishing package: $pkg"
-
-      - name: Build package (and workspace deps in order)
-        run: |
-          pnpm --filter cmd-table build
-          pnpm --filter '@cmd-table/reporter-core' build
-          pnpm --filter ${{ steps.parse.outputs.package }} build
-
-      - name: Publish package
-        working-directory: packages/${{ steps.parse.outputs.package }}
-        run: npm publish --access public --provenance
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: 'true'

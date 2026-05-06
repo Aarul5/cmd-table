@@ -13,7 +13,7 @@
     "format": "pnpm -r format",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "pnpm -r build && changeset publish",
+    "release": "pnpm --filter cmd-table build && pnpm --filter @cmd-table/reporter-core build && pnpm -r build && changeset publish",
     "prepare": "husky"
   },
   "devDependencies": {
