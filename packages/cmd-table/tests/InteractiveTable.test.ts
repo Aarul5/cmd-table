@@ -209,16 +209,16 @@ describe('InteractiveTable — keypress routing (nav mode)', () => {
   test('space toggles select-all on the current page', () => {
     const t = new InteractiveTable(buildTable());
     (t as any).applyFilterAndSort();
-    (t as any).handleKey(' ', { name: 'space' });
+    (t as any).handleKey('a', { name: 'a' });
     expect((t as any).selectedRows.size).toBe(4);
-    (t as any).handleKey(' ', { name: 'space' });
+    (t as any).handleKey('a', { name: 'a' });
     expect((t as any).selectedRows.size).toBe(0);
   });
 
   test('escape clears search query first, then selection', () => {
     const t = new InteractiveTable(buildTable());
     (t as any).applyFilterAndSort();
-    (t as any).handleKey(' ', { name: 'space' });
+    (t as any).handleKey('a', { name: 'a' });
     expect((t as any).selectedRows.size).toBe(4);
 
     (t as any).searchQuery = 'alice';
@@ -236,7 +236,7 @@ describe('InteractiveTable — keypress routing (nav mode)', () => {
     jest.spyOn(t, 'stop').mockImplementation(() => {});
 
     (t as any).applyFilterAndSort();
-    (t as any).handleKey(' ', { name: 'space' });
+    (t as any).handleKey('a', { name: 'a' });
     (t as any).handleKey('', { name: 'return' });
 
     expect(onSelect).toHaveBeenCalled();
@@ -381,5 +381,134 @@ describe('InteractiveTable — stop()', () => {
   test('falls back to process.exit when no onExit provided', () => {
     const t = new InteractiveTable(buildTable());
     expect(() => t.stop()).toThrow(/process\.exit/);
+  });
+});
+
+describe('InteractiveTable — cursor navigation', () => {
+  test('down arrow moves cursor down', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).handleKey('', { name: 'down' });
+    expect((t as any).cursorIndex).toBe(1);
+  });
+
+  test('down arrow clamps at last row on page', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 3; // last of 4 rows
+    (t as any).handleKey('', { name: 'down' });
+    expect((t as any).cursorIndex).toBe(3);
+  });
+
+  test('up arrow moves cursor up', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 2;
+    (t as any).handleKey('', { name: 'up' });
+    expect((t as any).cursorIndex).toBe(1);
+  });
+
+  test('up arrow clamps at 0', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).handleKey('', { name: 'up' });
+    expect((t as any).cursorIndex).toBe(0);
+  });
+
+  test('space toggles selection of row at cursor', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 1;
+    (t as any).handleKey(' ', { name: 'space' });
+    expect((t as any).selectedRows.size).toBe(1);
+    const selectedRow = [...(t as any).selectedRows][0];
+    expect(selectedRow.cells[0].content).toBe('Bob');
+  });
+
+  test('space deselects if row already selected', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 0;
+    (t as any).handleKey(' ', { name: 'space' });
+    expect((t as any).selectedRows.size).toBe(1);
+    (t as any).handleKey(' ', { name: 'space' });
+    expect((t as any).selectedRows.size).toBe(0);
+  });
+
+  test('"a" selects all displayed rows', () => {
+    const t = new InteractiveTable(buildTable());
+    (t as any).applyFilterAndSort();
+    (t as any).handleKey('a', { name: 'a' });
+    expect((t as any).selectedRows.size).toBe(4);
+  });
+
+  test('"a" deselects all when all already selected', () => {
+    const t = new InteractiveTable(buildTable());
+    (t as any).applyFilterAndSort();
+    (t as any).handleKey('a', { name: 'a' });
+    (t as any).handleKey('a', { name: 'a' });
+    expect((t as any).selectedRows.size).toBe(0);
+  });
+
+  test('cursor resets to 0 after page change', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 2 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 1;
+    (t as any).nextPage();
+    expect((t as any).cursorIndex).toBe(0);
+  });
+
+  test('cursor resets to 0 after filter', () => {
+    const t = new InteractiveTable(buildTable());
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 2;
+    (t as any).searchQuery = 'alice';
+    (t as any).applyFilterAndSort();
+    expect((t as any).cursorIndex).toBe(0);
+  });
+
+  test('render with cursor-only row does not throw', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 1;
+    expect(() => (t as any).render()).not.toThrow();
+  });
+
+  test('render with cursor+selected row does not throw', () => {
+    const t = new InteractiveTable(buildTable(), { pageSize: 4 });
+    (t as any).applyFilterAndSort();
+    (t as any).cursorIndex = 0;
+    (t as any).handleKey(' ', { name: 'space' });
+    expect(() => (t as any).render()).not.toThrow();
+  });
+});
+
+describe('InteractiveTable — start() and stop() TTY branch', () => {
+  test('start() registers keypress listener on stdin', () => {
+    const t = new InteractiveTable(buildTable());
+    const stdinOn = jest
+      .spyOn(process.stdin, 'on')
+      .mockImplementation((() => process.stdin) as any);
+    const stdoutOn = jest
+      .spyOn(process.stdout, 'on')
+      .mockImplementation((() => process.stdout) as any);
+    (t as any).applyFilterAndSort = jest.fn();
+    (t as any).render = jest.fn();
+    t.start();
+    expect(stdinOn).toHaveBeenCalledWith('keypress', expect.any(Function));
+    expect(stdoutOn).toHaveBeenCalledWith('resize', expect.any(Function));
+    stdinOn.mockRestore();
+    stdoutOn.mockRestore();
+  });
+
+  test('stop() calls setRawMode(false) when stdin is TTY', () => {
+    Object.defineProperty(process.stdin, 'isTTY', { value: true, configurable: true });
+    const setRawMode = jest.fn();
+    (process.stdin as any).setRawMode = setRawMode;
+    const onExit = jest.fn();
+    const t = new InteractiveTable(buildTable(), { onExit });
+    t.stop();
+    expect(setRawMode).toHaveBeenCalledWith(false);
+    Object.defineProperty(process.stdin, 'isTTY', { value: false, configurable: true });
   });
 });

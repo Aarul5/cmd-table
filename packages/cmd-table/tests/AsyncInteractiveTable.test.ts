@@ -299,3 +299,33 @@ describe('AsyncInteractiveTable — stop()', () => {
     expect(() => t.stop()).toThrow(/process\.exit/);
   });
 });
+
+describe('AsyncInteractiveTable — start() and stop() TTY branch', () => {
+  test('start() registers keypress listener on stdin', async () => {
+    const t = new AsyncInteractiveTable(new FakeDataSource(), buildTemplate(), { pageSize: 5 });
+    const stdinOn = jest
+      .spyOn(process.stdin, 'on')
+      .mockImplementation((() => process.stdin) as any);
+    const stdoutOn = jest
+      .spyOn(process.stdout, 'on')
+      .mockImplementation((() => process.stdout) as any);
+    (t as any).refreshData = jest.fn().mockResolvedValue(undefined);
+    (t as any).render = jest.fn();
+    await t.start();
+    expect(stdinOn).toHaveBeenCalledWith('keypress', expect.any(Function));
+    expect(stdoutOn).toHaveBeenCalledWith('resize', expect.any(Function));
+    stdinOn.mockRestore();
+    stdoutOn.mockRestore();
+  });
+
+  test('stop() calls setRawMode(false) when stdin is TTY', () => {
+    Object.defineProperty(process.stdin, 'isTTY', { value: true, configurable: true });
+    const setRawMode = jest.fn();
+    (process.stdin as any).setRawMode = setRawMode;
+    const onExit = jest.fn();
+    const t = new AsyncInteractiveTable(new FakeDataSource(), buildTemplate(), { onExit });
+    t.stop();
+    expect(setRawMode).toHaveBeenCalledWith(false);
+    Object.defineProperty(process.stdin, 'isTTY', { value: false, configurable: true });
+  });
+});

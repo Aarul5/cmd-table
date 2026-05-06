@@ -24,6 +24,7 @@ export class InteractiveTable {
   private displayedRows: Row[] = [];
   private hiddenColumns: Set<string> = new Set(); // Store column keys or names
   private columnSelectionIndex: number = 0;
+  private cursorIndex: number = 0;
 
   private onSelect?: (selected: any[]) => void;
   private onExit?: () => void;
@@ -95,6 +96,20 @@ export class InteractiveTable {
     }
 
     switch (key.name) {
+      case 'up': {
+        this.cursorIndex = Math.max(0, this.cursorIndex - 1);
+        this.render();
+        break;
+      }
+      case 'down': {
+        const pageRowsLength = Math.min(
+          this.pageSize,
+          this.displayedRows.length - (this.currentPage - 1) * this.pageSize,
+        );
+        this.cursorIndex = Math.min(pageRowsLength - 1, this.cursorIndex + 1);
+        this.render();
+        break;
+      }
       case 'c': // Switch to Columns Mode
         this.mode = 'columns';
         this.columnSelectionIndex = 0;
@@ -111,16 +126,23 @@ export class InteractiveTable {
       case 's':
         this.toggleSort();
         break;
-      case 'space':
-        // Toggle select all visible rows
-        const allSelected = this.displayedRows.every((r) => this.selectedRows.has(r));
-        if (allSelected) {
-          this.displayedRows.forEach((r) => this.selectedRows.delete(r));
-        } else {
-          this.displayedRows.forEach((r) => this.selectedRows.add(r));
+      case 'space': {
+        const start = (this.currentPage - 1) * this.pageSize;
+        const target = this.displayedRows[start + this.cursorIndex];
+        if (target) {
+          if (this.selectedRows.has(target)) this.selectedRows.delete(target);
+          else this.selectedRows.add(target);
         }
         this.render();
         break;
+      }
+      case 'a': {
+        const allSelected = this.displayedRows.every((r) => this.selectedRows.has(r));
+        if (allSelected) this.displayedRows.forEach((r) => this.selectedRows.delete(r));
+        else this.displayedRows.forEach((r) => this.selectedRows.add(r));
+        this.render();
+        break;
+      }
       case 'return': // Enter -> Action
       case 'enter':
         if (this.onSelect) {
@@ -229,12 +251,14 @@ export class InteractiveTable {
 
     this.displayedRows = rows;
     this.currentPage = 1;
+    this.cursorIndex = 0;
   }
 
   private nextPage(): void {
     const totalPages = Math.ceil(this.displayedRows.length / this.pageSize);
     if (this.currentPage < totalPages) {
       this.currentPage++;
+      this.cursorIndex = 0;
       this.render();
     }
   }
@@ -242,6 +266,7 @@ export class InteractiveTable {
   private prevPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
+      this.cursorIndex = 0;
       this.render();
     }
   }
@@ -265,7 +290,7 @@ export class InteractiveTable {
 
     console.log('--- Interactive Table (Advanced) ---');
     console.log(
-      `keys: [Right] Next | [Left] Prev | [s] Sort | [/] Search | [c] Columns | [Space] Select | [Enter] Confirm\n`,
+      `keys: [↑↓] Cursor | [Space] Toggle | [a] All | [Right] Next | [Left] Prev | [s] Sort | [/] Search | [c] Columns | [Enter] Confirm\n`,
     );
 
     // Filter visible columns
@@ -303,18 +328,25 @@ export class InteractiveTable {
       .map((c, i) => (!this.hiddenColumns.has(c.key || c.name) ? i : -1))
       .filter((i) => i !== -1);
 
-    viewTable.rows = pageRows.map((row) => {
+    viewTable.rows = pageRows.map((row, pageIdx) => {
       const isSelected = this.selectedRows.has(row);
+      const isCursor = pageIdx === this.cursorIndex;
 
-      // Filter cells
       const newCells = validIndices.map((i) => {
         const cell = row.cells[i];
-        if (!isSelected) return cell;
-        // Clone via the Cell constructor so the prototype (and getString())
-        // is preserved. A plain `{...cell}` spread loses the methods and
-        // crashes the renderer at calculateColumnWidths.
+        if (!isSelected && !isCursor) return cell;
+
+        let content: string;
+        if (isSelected && isCursor) {
+          content = `\x1b[1;32m${cell.content}\x1b[0m`; // bold green = selected+cursor
+        } else if (isSelected) {
+          content = `\x1b[32m${cell.content}\x1b[0m`; // green = selected
+        } else {
+          content = `\x1b[36m${cell.content}\x1b[0m`; // cyan = cursor only
+        }
+
         const highlighted = new Cell({
-          content: `\x1b[32m${cell.content}\x1b[0m`,
+          content,
           colSpan: cell.colSpan,
           rowSpan: cell.rowSpan,
           align: cell.align,
@@ -350,6 +382,7 @@ export class InteractiveTable {
     if (this.searchQuery) status += ` | Filter: "${this.searchQuery}"`;
     if (this.sortColumnIndex >= 0)
       status += ` | Sort: ${this.table.columns[this.sortColumnIndex]?.name} (${this.sortDirection})`;
+    status += ` | Cursor: ${this.cursorIndex + 1}/${pageRows.length}`;
 
     console.log(status);
 

@@ -682,18 +682,20 @@ console.log(table.render());
 | Dual ESM/CJS exports                        | v1.3.3        | Done   |
 | Diff table (side-by-side comparison)        | v1.4.0        | Done   |
 | Emoji/icon width support                    | v1.5.0        | Done   |
+| `cmd-table-jest-reporter` package           | v0.1.1        | Done   |
+| `cmd-table-vitest-reporter` package         | v0.1.1        | Done   |
+| `cmd-table-oclif` plugin                    | v0.1.1        | Done   |
+| Cell prototype fix — InteractiveTable crash | v1.5.4        | Done   |
+| 287 tests, 94.69% overall coverage          | v1.5.4        | Done   |
 
 ### Planned
 
-| Feature                     | Priority  | Status  |
-| :-------------------------- | :-------- | :------ |
-| Browser console rendering   | Medium    | Planned |
-| Gantt-chart rows            | Medium    | Planned |
-| YAML export                 | Medium    | Planned |
-| `cmd-table-jest-reporter`   | Very High | Planned |
-| `cmd-table-vitest-reporter` | High      | Planned |
-| `cmd-table-oclif` plugin    | High      | Planned |
-| `cmd-table-ink` integration | Medium    | Planned |
+| Feature                     | Priority | Status  |
+| :-------------------------- | :------- | :------ |
+| Browser console rendering   | Medium   | Planned |
+| Gantt-chart rows            | Medium   | Planned |
+| YAML export                 | Medium   | Planned |
+| `cmd-table-ink` integration | Medium   | Planned |
 
 ## Contributing
 
