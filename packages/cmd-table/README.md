@@ -91,7 +91,7 @@ The top CLI table libraries for Node.js haven't been updated in years. cmd-table
 - **Interactive TUI**: Built-in interactive mode for exploring large datasets with search, filtering, and row selection.
 - **Data Visualization**:
   - **Sparklines & Heatmaps**: Visualize trends and data density directly in cells.
-  - **Progress Bars**: Render inline `████░░░░ 65%` progress indicators in any cell.
+  - **Progress Bars**: Render inline `████▒▒▒▒ 65%` progress indicators in any cell.
   - **Tree View**: Visualize hierarchical data with automatic indentation.
   - **Auto-Merge**: Automatically vertically merge identical adjacent cells.
   - **Header Groups**: Spans multiple columns under a super-header.
@@ -500,8 +500,8 @@ t.addColumn({
 t.addRow({ module: 'core', coverage: 82 });
 t.addRow({ module: 'cli', coverage: 47 });
 console.log(t.render());
-// │ core │ ████████░░ 82% │
-// │ cli  │ ████░░░░░░ 47% │
+// │ core │ ████████▒▒ 82% │
+// │ cli  │ ████▒▒▒▒▒▒ 47% │
 ```
 
 **`ProgressBar.generate(value, max?, options?)` options:**
@@ -510,7 +510,7 @@ console.log(t.render());
 | ------------- | ------- | --------------------------------------- |
 | `width`       | `10`    | Bar character width                     |
 | `filled`      | `'█'`   | Filled character                        |
-| `empty`       | `'░'`   | Empty character                         |
+| `empty`       | `'▒'`   | Empty character                         |
 | `showPercent` | `true`  | Append `65%` label                      |
 | `label`       | auto    | Override with custom text, e.g. `'3/5'` |
 

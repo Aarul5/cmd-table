@@ -20,7 +20,6 @@ import { Table } from 'cmd-table';
 
 // CommonJS
 // const { Table } = require('cmd-table');
-```
 
 const table = new Table();
 table.addRow({ Name: 'Alice', Role: 'Engineer', Status: 'Active' });
@@ -31,6 +30,7 @@ console.log(table.render());
 ```
 
 **Expected output:**
+
 ```
 ╭─────────┬──────────┬────────╮
 │ Name    │ Role     │ Status │
@@ -67,9 +67,9 @@ Add many rows at once with `addRows()`.
 
 ```ts
 table.addRows([
-    { Name: 'Alice', Age: 30 },
-    { Name: 'Bob', Age: 25 },
-    { Name: 'Charlie', Age: 35 }
+  { Name: 'Alice', Age: 30 },
+  { Name: 'Bob', Age: 25 },
+  { Name: 'Charlie', Age: 35 },
 ]);
 ```
 
@@ -78,10 +78,7 @@ table.addRows([
 For fine-grained control, pass cell objects with alignment, spans, etc.
 
 ```ts
-table.addRow([
-    { content: 'Merged Header', colSpan: 2, align: 'center' },
-    'Normal Cell'
-]);
+table.addRow([{ content: 'Merged Header', colSpan: 2, align: 'center' }, 'Normal Cell']);
 ```
 
 ## Defining Columns Explicitly
@@ -91,7 +88,7 @@ While auto-detection is convenient, explicit columns give you full control.
 ```ts
 const table = new Table();
 
-table.addColumn('Name');                          // Simple string
+table.addColumn('Name'); // Simple string
 table.addColumn({ name: 'Age', align: 'right' }); // With config
 table.addColumn({ name: 'Status', color: 'green', width: 12 }); // Styled
 
@@ -104,14 +101,14 @@ You can configure the table globally via the constructor:
 
 ```ts
 const table = new Table({
-    columns: [
-        { name: 'ID', width: 5, align: 'right' },
-        { name: 'Name', color: 'cyan' }
-    ],
-    headerColor: 'blue',
-    compact: true,      // No row separators
-    zebra: true,        // Alternating row dimming
-    responsiveMode: 'hide'
+  columns: [
+    { name: 'ID', width: 5, align: 'right' },
+    { name: 'Name', color: 'cyan' },
+  ],
+  headerColor: 'blue',
+  compact: true, // No row separators
+  zebra: true, // Alternating row dimming
+  responsiveMode: 'hide',
 });
 ```
 

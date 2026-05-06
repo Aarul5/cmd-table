@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.3] - 2026-05-06
+
+### Fixed
+
+- **`ProgressBar` empty-cell height inconsistency.** The default empty character changed from `░` (U+2591 LIGHT SHADE) to `▒` (U+2592 MEDIUM SHADE). `░` rendered visibly taller than `█` in many monospace fonts (especially in browsers and some Windows terminals), making rows of progress bars look uneven. `▒` is in the same U+259x box-drawing family as `█` and matches its vertical metrics.
+  - Custom `empty` characters via the `options.empty` parameter are unaffected.
+  - If you specifically want the old look, pass `{ empty: '░' }`.
+- **Docs site**: fixed broken code fence on the "Your First Table" example in `getting-started.md` that mangled the rendered table output.
+- **Docs site**: added the missing `migration.md` page (`/guide/migration` was 404).
+
 ## [1.5.2] - 2026-04-30
 
 ### Fixed

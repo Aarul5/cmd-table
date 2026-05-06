@@ -119,9 +119,9 @@ console.log(t.render());
 ╭─────────┬─────────────────╮
 │ Module  │ Coverage        │
 ├─────────┼─────────────────┤
-│ core    │ ████████░░ 82%  │
+│ core    │ ████████▒▒ 82%  │
 ├─────────┼─────────────────┤
-│ cli     │ ████░░░░░░ 47%  │
+│ cli     │ ████▒▒▒▒▒▒ 47%  │
 ├─────────┼─────────────────┤
 │ plugins │ ██████████ 100% │
 ╰─────────┴─────────────────╯
@@ -139,7 +139,7 @@ ProgressBar.generate(value: number, max?: number, options?: ProgressBarOptions):
 | `max` | `number` | `100` | Maximum value (denominator) |
 | `options.width` | `number` | `10` | Bar width in characters |
 | `options.filled` | `string` | `'█'` | Character for the filled portion |
-| `options.empty` | `string` | `'░'` | Character for the empty portion |
+| `options.empty` | `string` | `'▒'` | Character for the empty portion |
 | `options.showPercent` | `boolean` | `true` | Append the `65%` label |
 | `options.label` | `string` | auto | Override with a custom label, e.g. `'3/5'` |
 
@@ -150,10 +150,10 @@ You can also use `ProgressBar.generate` anywhere — not just in table cells:
 ```ts
 import { ProgressBar } from 'cmd-table';
 
-console.log(ProgressBar.generate(65));                          // ██████░░░░ 65%
-console.log(ProgressBar.generate(3, 5, { width: 5 }));         // ███░░ 60%
-console.log(ProgressBar.generate(50, 100, { showPercent: false })); // █████░░░░░
-console.log(ProgressBar.generate(3, 5, { label: '3 / 5 done' }));  // ███░░ 3 / 5 done
+console.log(ProgressBar.generate(65));                          // ██████▒▒▒▒ 65%
+console.log(ProgressBar.generate(3, 5, { width: 5 }));         // ███▒▒ 60%
+console.log(ProgressBar.generate(50, 100, { showPercent: false })); // █████▒▒▒▒▒
+console.log(ProgressBar.generate(3, 5, { label: '3 / 5 done' }));  // ███▒▒ 3 / 5 done
 ```
 
 ## Tree View

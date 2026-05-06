@@ -6,7 +6,7 @@
  *
  * @example
  * // Basic usage — 65 out of 100
- * ProgressBar.generate(65);           // "███████░░░ 65%"
+ * ProgressBar.generate(65);           // "███████▒▒▒ 65%"
  *
  * @example
  * // Custom width and characters
@@ -14,7 +14,7 @@
  *
  * @example
  * // Hide the percentage label
- * ProgressBar.generate(50, 100, { showPercent: false }); // "█████░░░░░"
+ * ProgressBar.generate(50, 100, { showPercent: false }); // "█████▒▒▒▒▒"
  *
  * @example
  * // Use as a column formatter
@@ -31,7 +31,7 @@ export interface ProgressBarOptions {
   width?: number;
   /** Character used for the filled portion (default: '█') */
   filled?: string;
-  /** Character used for the empty portion (default: '░') */
+  /** Character used for the empty portion (default: '▒') */
   empty?: string;
   /** Whether to append the percentage label, e.g. " 65%" (default: true) */
   showPercent?: boolean;
@@ -46,7 +46,7 @@ export class ProgressBar {
    * @param value   - Current value (numerator).
    * @param max     - Maximum value (denominator). Defaults to 100.
    * @param options - Display options.
-   * @returns A string like `"███████░░░ 65%"` ready to place in a cell.
+   * @returns A string like `"███████▒▒▒ 65%"` ready to place in a cell.
    */
   public static generate(
     value: number,
@@ -55,7 +55,7 @@ export class ProgressBar {
   ): string {
     const width = options.width ?? 10;
     const filled = options.filled ?? '█';
-    const empty = options.empty ?? '░';
+    const empty = options.empty ?? '▒';
     const showPercent = options.showPercent ?? true;
 
     // Guard: avoid division by zero

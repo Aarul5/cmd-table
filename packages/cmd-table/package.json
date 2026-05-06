@@ -1,6 +1,6 @@
 {
   "name": "cmd-table",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "CLI table library for Node.js with interactive terminal UI, streaming, CSV/JSON/HTML support, pivot tables, sparklines, and TypeScript. A modern alternative to cli-table3 and table.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

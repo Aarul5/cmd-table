@@ -281,7 +281,7 @@ table.addColumn({
     minWidth: 15,
     formatter: (v) => ProgressBar.generate(Number(v), 100, { width: 10 }),
 });
-// ████████░░ 82%
+// ████████▒▒ 82%
 ```
 
 ::: tip
