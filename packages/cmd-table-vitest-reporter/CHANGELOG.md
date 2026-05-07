@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [8bc58bb]
+  - cmd-table@1.6.0
+
 ## [0.1.1] - 2026-04-30
 
 ### Fixed
